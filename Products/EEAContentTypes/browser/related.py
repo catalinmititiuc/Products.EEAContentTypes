@@ -155,17 +155,16 @@ class AutoRelated(object):
         self.context = context
         self.request = request
 
-    def sameTypeByTheme(self):
+    def sameTypeByTheme(self, limitResults=None):
         """NOTE: returns full info. The results are limited in number so
         we can afford this
         """
         # doesn't return latest item found at
         # www/SITE/themes/natural/publications
         # which was www/SITE/publications/consumption-and-the-environment-2012
-        limitResults = 3
+        limitResults = limitResults or 3
         result = self.sameTheme(portal_type=self.context.portal_type,
                                 limitResults=limitResults)
-
         byTheme = {}
         brainsWithMultipleThemes = []
         for i in range(0, len(result)):
@@ -178,7 +177,7 @@ class AutoRelated(object):
             if len(themes) > 1:
                 brainsWithMultipleThemes.append(annotatedBrain)
 
-            if len(themeObjs) < 3:
+            if len(themeObjs) < limitResults:
                 themeObjs.append(annotatedBrain)
                 byTheme[theme] = themeObjs
 
@@ -189,7 +188,7 @@ class AutoRelated(object):
                 for brain in brainsWithMultipleThemes:
                     if theme in brain['commonThemesIds']:
                         byTheme[theme].append(brain)
-                        # break if we already have enough results for the given
+                    # break if we already have enough results for the given
                     # theme
                     if not len(byTheme[theme]) < limitResults:
                         break

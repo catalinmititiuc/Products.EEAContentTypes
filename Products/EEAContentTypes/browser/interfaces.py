@@ -9,7 +9,7 @@ class IRSSShare(Interface):
 
     def main():
         """ Returns objects for the main rss share. It takes all frontpage
-        items and items from rssrecipes. With arguements exclude_channels and
+        items and items from rssrecipes. With arguments exclude_channels and
         include_channels you can choose which rssrecipe to exclude and include.
         Default include list is all and exclude none.
         The old highlights.rdf. """
@@ -124,7 +124,7 @@ class IQuickEvent(Interface):
     """
 
     def hasCanceled():
-        """ return true if user has canceled submition """
+        """ return true if user has canceled submission """
 
     def canView():
         """ Returns true if the event is published. """
@@ -228,11 +228,14 @@ class IAutoRelated(Interface):
     def sameType():
         """ Return related documents of the same type. Relation is by type. """
 
-    def sameTypeByTheme():
-        """ Return related documents of the same type. Grouped by theme. """
+    def sameTypeByTheme(limitResults):
+        """ Return related documents of the same type. Grouped by theme.
+            With optional limitResults parameter to affect the limit the
+            returned results
+        """
 
     def sameTypeByPublicationGroup():
-        """ Return related doucments of the same type, grouped by
+        """ Return related documents of the same type, grouped by
             publication group.
         """
 
