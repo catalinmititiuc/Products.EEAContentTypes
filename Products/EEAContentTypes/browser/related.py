@@ -159,16 +159,40 @@ class AutoRelated(object):
         """NOTE: returns full info. The results are limited in number so
         we can afford this
         """
-        result = self.sameTheme(portal_type=self.context.portal_type)
+        # doesn't return latest item found at
+        # www/SITE/themes/natural/publications
+        # which was www/SITE/publications/consumption-and-the-environment-2012
+        limitResults = 3
+        result = self.sameTheme(portal_type=self.context.portal_type,
+                                limitResults=limitResults)
 
         byTheme = {}
-
-        for res in result:
-            theme = res['commonThemesIds'][0]
+        brainsWithMultipleThemes = []
+        for i in range(0, len(result)):
+            annotatedBrain = result[i]
+            themes = annotatedBrain['commonThemesIds']
+            theme = themes[0]
             themeObjs = byTheme.get(theme, [])
+            # save items with multiple themes in case we will need them later
+            # if we have less results per theme
+            if len(themes) > 1:
+                brainsWithMultipleThemes.append(annotatedBrain)
+
             if len(themeObjs) < 3:
-                themeObjs.append(res)
+                themeObjs.append(annotatedBrain)
                 byTheme[theme] = themeObjs
+
+        # check if we have the right amount of items based on limitResults
+        # for every theme
+        for theme in byTheme:
+            if len(byTheme[theme]) < limitResults:
+                for brain in brainsWithMultipleThemes:
+                    if theme in brain['commonThemesIds']:
+                        byTheme[theme].append(brain)
+                        # break if we already have enough results for the given
+                    # theme
+                    if not len(byTheme[theme]) < limitResults:
+                        break
 
         annotateByThemeInfo(byTheme, self.request)
 
@@ -192,7 +216,7 @@ class AutoRelated(object):
             dicts['items'].reverse()
         return themes
 
-    def sameTheme(self, portal_type=None):
+    def sameTheme(self, portal_type=None, limitResults=None):
         """
         NOTE: returns incomplete info, from getBrainInfo. You need to call
         annotateBrainInfo() if you need full info
@@ -205,7 +229,9 @@ class AutoRelated(object):
         result = IRelations(self.context).byTheme(portal_type,
                                                   getBrains=True,
                                                   considerDeprecated=True,
-                                                  constraints=constraints)
+                                                  constraints=constraints,
+                                                  limitResults=limitResults
+                                                  )
 
         contextThemes = self._contextThemes()
         #vocabFactory = getUtility(IVocabularyFactory, name="Allowed themes")
@@ -242,7 +268,7 @@ class AutoRelated(object):
         annotateThemeInfos(nondups, self.request)
         return nondups
 
-    def sameType(self, portal_type=None):
+    def sameType(self, portal_type=None, limitResults=None):
         """
         NOTE: returns incomplete info, from getBrainInfo. You need to call
         annotateBrainInfo() if you need full info
@@ -257,7 +283,9 @@ class AutoRelated(object):
         result = IRelations(self.context).getItems(portal_type,
                                                   getBrains=True,
                                                   considerDeprecated=True,
-                                                  constraints=constraints)
+                                                  constraints=constraints,
+                                                  limitResults=limitResults
+                                                  )
         related = others(self.context, result)
 
         #for item in related:
@@ -363,6 +391,7 @@ class DocumentRelated(BrowserView):
             if queryAdapter(item, IVideo):
                 link['has_media_player'] = True
             else:
+
                 link['has_media_player'] = False
             if item.portal_type == 'FlashFile':
                 link['popup-url'] = item.absolute_url() + \

@@ -86,7 +86,8 @@ class Relations(object):
         return result
 
     def getItems(self, portal_type=None, getBrains=False,
-                considerDeprecated=True, constraints=None, theme=None):
+                considerDeprecated=True, constraints=None, theme=None,
+                limitResults=None):
         """ Items
         """
         catalog = getToolByName(self.context, 'portal_catalog')
@@ -94,9 +95,9 @@ class Relations(object):
         query = { 'sort_on': 'effective',
                   'sort_order': 'reverse',
                   'Language': self.context.getLanguage(),
-                  'effectiveRange': DateTime() }
+                  'effectiveRange': DateTime()}
 
-        if theme != None:
+        if theme:
             if considerDeprecated:
                 contextThemes = theme.nondeprecated_tags
             else:
@@ -106,7 +107,7 @@ class Relations(object):
         if constraints:
             query.update(constraints)
 
-        if portal_type != None:
+        if portal_type:
             # Highlights and Press releases are usually listed together
             if portal_type in ['Highlight', 'PressRelease']:
                 portal_type = ['Highlight', 'PressRelease']
@@ -117,10 +118,18 @@ class Relations(object):
 
             query['portal_type'] = portal_type
 
-        brains = catalog.searchResults(query)
-
+        if limitResults:
+            # add 1 more to limit since we might get contextPath as result
+            query['sort_limit'] = limitResults + 1
+            res = []
+            if theme:
+                for item in contextThemes:
+                    query['getThemes'] = item
+                    res.extend(catalog.searchResults(query))
+            brains = res
+        else:
+            brains = catalog.searchResults(query)
         contextPath = '/'.join(self.context.getPhysicalPath())
-
         if getBrains:
             return [brain for brain in brains if brain.getPath() != contextPath]
         else:
@@ -128,7 +137,7 @@ class Relations(object):
                     brain in brains if brain.getPath() != contextPath]
 
     def byTheme(self, portal_type=None, getBrains=False,
-                considerDeprecated=True, constraints=None):
+                considerDeprecated=True, constraints=None, limitResults=None):
         """ By theme
         """
         theme = queryAdapter(self.context, IThemeTagging)
@@ -136,7 +145,7 @@ class Relations(object):
             # not theme taggable
             return []
         return self.getItems(portal_type, getBrains, considerDeprecated,
-                             constraints, theme)
+                             constraints, theme, limitResults)
 
     def byPublicationGroup(self, samePortalType=True, getBrains=False,
                            constraints=None):
