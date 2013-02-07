@@ -3,6 +3,12 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Change: disabled eea_keywords macro setting for subject since we already 
+  provide a different macro with the eea.tags widget
+  [ichimdav #13771]
+* Change: removed copying of schema to speed up schema modifier which sets a 
+  different widget for location, themes and subject
+  [ichimdav #13771]
 * Bug fix: Corrected errors in code.
 * Bug Fix: Removed the possibility to edit relations for translated objects.
   [prospchr refs #9569]

@@ -221,17 +221,15 @@ class RequiredSchemaModifier(object):
                     return
 
         if 'location' in schema and self.context.portal_type != 'Data':
-            xfield = schema['location'].copy()
+            xfield = schema['location']
             xfield.required = True
-            schema['location'] = xfield
         if 'themes' in schema:
-            xfield = schema['themes'].copy()
+            xfield = schema['themes']
             xfield.required = True
-            schema['themes'] = xfield
         if 'subject' in schema:
-            xfield = schema['subject'].copy()
+            xfield = schema['subject']
             xfield.required = True
-            schema['subject'] = xfield
+
 
 class KeywordsSchemaModifier(object):
     """ Fix keywords postback bug http://dev.plone.org/ticket/12334
@@ -245,8 +243,17 @@ class KeywordsSchemaModifier(object):
         """ Fields
         """
         if 'subject' in schema:
+            # since only subject has the keywordsWidget macro we can disable
+            # giving it eea_keywords since eea.tags as it's own keywords macro
+            # schema['subject'].widget.macro = 'eea_keywords'
+            # TODO: this fix doesn't apply to this problem anymore,
+            # to be removed or to be replaced if a keywordsWidget field is
+            # added
+
+            # make subject field languageIndependent as required since ticket
+            # 8761
             schema['subject'].languageIndependent = True
-            schema['subject'].widget.macro = 'eea_keywords'
+
 
 class RequiredByPortalTypeSchemaModifier(RequiredSchemaModifier):
     """ Modify schema
