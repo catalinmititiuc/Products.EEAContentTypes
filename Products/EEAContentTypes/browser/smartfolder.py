@@ -9,6 +9,7 @@ from zope.component import getMultiAdapter
 
 DATE_FIELDS = ('start', 'end', 'EffectiveDate', 'effective', 'expires')
 
+
 class SmartFolderPortlets(object):
     """ Smart folder portlets
     """
@@ -44,7 +45,8 @@ class SmartFolderPortlets(object):
             if portlet['entries']:
                 portlets.append(portlet)
 
-        portlets.sort(cmp=lambda x, y: cmp(x['sort_key'], y['sort_key']))
+        if len(portlets) > 1:
+            portlets.sort(cmp=lambda x, y: cmp(x['sort_key'], y['sort_key']))
 
         return portlets
 
@@ -80,16 +82,18 @@ class SmartFolderPortlets(object):
         """
         topic_query = topic.buildQuery()
         catalog = getToolByName(topic, 'portal_catalog')
-        topic_brains = catalog.searchResults(topic_query)[:3]
         entries = []
-        extra_fields = [ field for field in topic.getCustomViewFields()
-                               if field != 'Title' ]
+        if topic_query:
+            topic_query['sort_limit'] = 3
+            topic_brains = catalog.searchResults(topic_query)
+            extra_fields = [ field for field in topic.getCustomViewFields()
+                                   if field != 'Title' ]
 
-        for tb in topic_brains:
-            item = { 'url': tb.getURL(),
-                     'title': tb.Title,
-                     'detail': self._detail(extra_fields, tb) }
-            entries.append(item)
+            for tb in topic_brains:
+                item = { 'url': tb.getURL(),
+                         'title': tb.Title,
+                         'detail': self._detail(extra_fields, tb) }
+                entries.append(item)
         return entries
 
     def _portlet_info(self, topic):
@@ -122,12 +126,9 @@ class SmartFolderPortlets(object):
                 if detail:
                     detail += u', '
                 if field == 'location':
-                    # location is unicode in the brain,
-                    # it shouldn't be, but it is
-                    try:
-                        detail += brain[field]
-                    except Exception:
-                        continue
+                    # only date is used for detail therefore we pass the
+                    # location
+                    continue
                 elif isinstance(brain[field], (list, tuple)):
                     detail += ', '.join(value.decode('utf8')
                                         for value in brain[field])
