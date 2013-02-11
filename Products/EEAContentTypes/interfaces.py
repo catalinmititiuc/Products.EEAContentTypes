@@ -66,7 +66,7 @@ class IRelations(Interface):
         backreferences.
         """
 
-    def byTheme(samePortalType=False, getBrains=False):
+    def byTheme(samePortalType=False, getBrains=False, constraints=False):
         """ Gets all objects that have the same theme tag is the adapted object.
             samePortalType argument should be true if the related objects should
             be of the same portal type as context. getBrains argument should be

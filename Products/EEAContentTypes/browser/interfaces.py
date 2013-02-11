@@ -228,9 +228,9 @@ class IAutoRelated(Interface):
     def sameType():
         """ Return related documents of the same type. Relation is by type. """
 
-    def sameTypeByTheme(limitResults):
+    def sameTypeByTheme(constraints):
         """ Return related documents of the same type. Grouped by theme.
-            With optional limitResults parameter to affect the limit the
+            With optional constraints dict parameter to affect the
             returned results
         """
 

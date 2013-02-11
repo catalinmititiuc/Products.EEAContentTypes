@@ -22,9 +22,6 @@ from zope.component import (
 )
 from zope.interface import implements
 
-import logging
-
-logger = logging.getLogger('Products.EEAContentTypes.related')
 
 TOP_VIDEOS = 3
 MEDIA_ORDER = ['video']
@@ -57,14 +54,16 @@ def getObjectInfo(item, request):
 
     return info
 
-def getBrainInfo(brain, plone_utils):
+def getBrainInfo(brain, plone_utils, typesUsingViewUrl=None):
     """ Brain info
     """
+    url = brain.getURL()
     info = { 'title': brain.Title,
              'brain':brain,
              'uid': brain.UID,
              'description': brain.Description,
-             'absolute_url': brain.getURL(),
+             'absolute_url': url,
+             'url': url,
              'is_video':
              "eea.mediacentre.interfaces.IVideo" in brain.object_provides,
              'item_type': brain.portal_type,
@@ -79,6 +78,12 @@ def getBrainInfo(brain, plone_utils):
              #'has_img': imgview != None and imgview.display() == True,
 
              }
+
+    # 13771 set /view to info dict without waking up object with
+    # annotatedBrainInfo by checking directly on brain if item_type is in the
+    # typesUsingViewUrl
+    if typesUsingViewUrl and info['item_type'] in typesUsingViewUrl:
+        info['url'] = url + '/view'
 
     return info
 
@@ -103,7 +108,7 @@ def annotateBrainInfo(info, request, urlOnly=None):
         if not urlOnly:
             imgview = queryMultiAdapter((obj, request), name="imgview")
             info['has_img'] = (imgview != None and imgview.display() == True)
-            info['item_mimetype'] = obj.get_content_type()
+            info['item_mimetype'] = obj.get_content_t_cachedype()
         info['url'] = url
 
 
@@ -158,18 +163,22 @@ class AutoRelated(object):
         self.context = context
         self.request = request
 
-    def sameTypeByTheme(self, limitResults=None):
+    def sameTypeByTheme(self, constraints=None):
         """NOTE: returns full info. The results are limited in number so
         we can afford this
+        :param constraints: a dict which constraints the result of the query
         """
         # doesn't return latest item found at
         # www/SITE/themes/natural/publications
         # which was www/SITE/publications/consumption-and-the-environment-2012
-        logger.info('called sameTypeByTheme')
-        limitResults = limitResults or 3
+        defaultConstraints = {'review_state': 'published', 'sort_limit': 3}
+        if constraints:
+            defaultConstraints.update(constraints)
+        limitResults = defaultConstraints['sort_limit']
         result = self.sameTheme(portal_type=self.context.portal_type,
-                                limitResults=limitResults)
+                                constraints=defaultConstraints)
         byTheme = {}
+
         brainsWithMultipleThemes = []
         for annotatedBrain in result:
             themes = annotatedBrain['commonThemesIds']
@@ -196,7 +205,7 @@ class AutoRelated(object):
                     if not len(byTheme[theme]) < limitResults:
                         break
 
-        annotateByThemeInfo(byTheme, self.request)
+        #annotateByThemeInfo(byTheme, self.request)
 
         # now we have the themes in a dictionary, put them in a list instead
         themes = []
@@ -222,40 +231,41 @@ class AutoRelated(object):
             dicts['items'].reverse()
         return themes
 
-    def sameTheme(self, portal_type=None, limitResults=None):
+    def sameTheme(self, portal_type=None, constraints=None):
         """
         NOTE: returns incomplete info, from getBrainInfo. You need to call
         annotateBrainInfo() if you need full info
 
         TODO: this should be made a private methods, not callable through
         the normal API, to emphasize that it doesn't return full info.
-
         """
-        constraints = {'review_state': 'published'}
         result = IRelations(self.context).byTheme(portal_type,
                                                   getBrains=True,
                                                   considerDeprecated=True,
-                                                  constraints=constraints,
-                                                  limitResults=limitResults
-                                                  )
+                                                  constraints=constraints)
 
         contextThemes = self._contextThemes()
-        #vocabFactory = getUtility(IVocabularyFactory, name="Allowed themes")
-        #themeVocab = vocabFactory(self)
         related = []
         plone_utils = getToolByName(self.context, 'plone_utils')
+        portal_properties = getToolByName(self.context, 'portal_properties',
+                                                                        None)
+        site_properties = getattr(portal_properties, 'site_properties', None)
+        typesUsingViewUrl = site_properties.getProperty(
+                                            'typesUseViewActionInListings', ())
 
         for item in result:
             # skip articles from auto related by theme since they are related
             # by publication group
-            if item.portal_type in ['Article']:
+            if item.portal_type == 'Article':
                 continue
 
             if item.getId != self.context.getId():
                 commonThemesIds = [ theme for theme in item.getThemes
                                     if theme in contextThemes ]
                 #info = getObjectInfo(item.getObject(), self.request)
-                info = getBrainInfo(item, plone_utils)
+                # pass typesUsingViewUrl to getBrainInfo so we no longer have
+                # to wake up objects for getting the urlview
+                info = getBrainInfo(item, plone_utils, typesUsingViewUrl)
                 info['commonThemesIds'] = commonThemesIds
                 related.append(info)
 
@@ -274,7 +284,7 @@ class AutoRelated(object):
         annotateThemeInfos(nondups, self.request)
         return nondups
 
-    def sameType(self, portal_type=None, limitResults=None):
+    def sameType(self, portal_type=None, constraints=None):
         """
         NOTE: returns incomplete info, from getBrainInfo. You need to call
         annotateBrainInfo() if you need full info
@@ -285,12 +295,10 @@ class AutoRelated(object):
         """
         if portal_type == None:
             portal_type = self.context.portal_type
-        constraints = {'review_state': 'published'}
         result = IRelations(self.context).getItems(portal_type,
                                                   getBrains=True,
                                                   considerDeprecated=True,
                                                   constraints=constraints,
-                                                  limitResults=limitResults
                                                   )
         related = others(self.context, result)
 
@@ -338,7 +346,7 @@ class AutoRelated(object):
 
 
 class DocumentRelated(BrowserView):
-    """ Some docstinrg. """
+    """ DocumentRelated BrowserView """
 
     implements(IDocumentRelated)
 
@@ -465,7 +473,7 @@ class DocumentRelated(BrowserView):
         return len(self._all_media())
 
     def multimedia(self):
-        """ Mutimedia
+        """ Multimedia
         """
         # TODO: delete? Where's this used?
         #multimedia = []

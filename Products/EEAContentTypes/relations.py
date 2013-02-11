@@ -86,8 +86,7 @@ class Relations(object):
         return result
 
     def getItems(self, portal_type=None, getBrains=False,
-                considerDeprecated=True, constraints=None, theme=None,
-                limitResults=None):
+                considerDeprecated=True, constraints=None, theme=None):
         """ Items
         """
         catalog = getToolByName(self.context, 'portal_catalog')
@@ -105,6 +104,9 @@ class Relations(object):
             query['getThemes'] = contextThemes
 
         if constraints:
+            # add 1 more to limit since we might get contextPath as result
+            if constraints['sort_limit']:
+                constraints['sort_limit'] += 1
             query.update(constraints)
 
         if portal_type:
@@ -118,14 +120,11 @@ class Relations(object):
 
             query['portal_type'] = portal_type
 
-        if limitResults:
-            # add 1 more to limit since we might get contextPath as result
-            query['sort_limit'] = limitResults + 1
-            res = []
-            if theme:
-                for item in contextThemes:
-                    query['getThemes'] = item
-                    res.extend(catalog.searchResults(query))
+        res = []
+        if theme:
+            for item in contextThemes:
+                query['getThemes'] = item
+                res.extend(catalog.searchResults(query))
             brains = res
         else:
             brains = catalog.searchResults(query)
@@ -137,7 +136,7 @@ class Relations(object):
                     brain in brains if brain.getPath() != contextPath]
 
     def byTheme(self, portal_type=None, getBrains=False,
-                considerDeprecated=True, constraints=None, limitResults=None):
+                considerDeprecated=True, constraints=None):
         """ By theme
         """
         theme = queryAdapter(self.context, IThemeTagging)
@@ -145,7 +144,7 @@ class Relations(object):
             # not theme taggable
             return []
         return self.getItems(portal_type, getBrains, considerDeprecated,
-                             constraints, theme, limitResults)
+                             constraints, theme)
 
     def byPublicationGroup(self, samePortalType=True, getBrains=False,
                            constraints=None):
