@@ -7,7 +7,7 @@ from eea.mediacentre.interfaces import IMediaType
 from eea.rdfrepository.interfaces import IFeed, IFeedDiscover
 from eea.rdfrepository.plugins.discover import DiscoverPlugin
 from eea.rdfrepository.utils import getFeedItemsWithoutDuplicates
-from eea.themecentre.interfaces import IThemeMoreLink
+#from eea.themecentre.interfaces import IThemeMoreLink
 from eea.themecentre.interfaces import IThemeTagging
 from eea.translations import _
 from Products.EEAContentTypes.browser.interfaces import (
@@ -83,7 +83,7 @@ def getBrainInfo(brain, plone_utils):
     return info
 
 
-def annotateBrainInfo(info, request):
+def annotateBrainInfo(info, request, urlOnly=None):
     """Adds details about the object taken from its brain
 
     Note on the optimization that this achieves:
@@ -95,26 +95,26 @@ def annotateBrainInfo(info, request):
     result and then call annotateBrainInfo for each brain.
     """
 
-    if not info.get('brain'):
-        return
-
-    brain = info['brain']
-    obj = brain.getObject()
-    state = getMultiAdapter((obj, request), name="plone_context_state")
-    url = state.view_url()
-    imgview = queryMultiAdapter((obj, request), name="imgview")
-    info['has_img'] = (imgview != None and imgview.display() == True)
-    info['item_mimetype'] = obj.get_content_type()
-    info['url'] = url
+    if info.get('brain'):
+        brain = info['brain']
+        obj = brain.getObject()
+        state = getMultiAdapter((obj, request), name="plone_context_state")
+        url = state.view_url()
+        if not urlOnly:
+            imgview = queryMultiAdapter((obj, request), name="imgview")
+            info['has_img'] = (imgview != None and imgview.display() == True)
+            info['item_mimetype'] = obj.get_content_type()
+        info['url'] = url
 
 
 def annotateByThemeInfo(byTheme, request):
     """Add extra information that can only be retrieved from the full object
+       In the case of themes we need only the url
     """
 
     for _theme, infos in byTheme.items():
         for info in infos:
-            annotateBrainInfo(info, request)
+            annotateBrainInfo(info, request, urlOnly=True)
 
 
 def annotateThemeInfos(themeinfos, request):
@@ -171,8 +171,7 @@ class AutoRelated(object):
                                 limitResults=limitResults)
         byTheme = {}
         brainsWithMultipleThemes = []
-        for index, brain in enumerate(result):
-            annotatedBrain = brain
+        for annotatedBrain in result:
             themes = annotatedBrain['commonThemesIds']
             theme = themes[0]
             themeObjs = byTheme.get(theme, [])
@@ -189,9 +188,9 @@ class AutoRelated(object):
         # for every theme
         for theme in byTheme:
             if len(byTheme[theme]) < limitResults:
-                for brain in brainsWithMultipleThemes:
-                    if theme in brain['commonThemesIds']:
-                        byTheme[theme].append(brain)
+                for annotatedBrain in brainsWithMultipleThemes:
+                    if theme in annotatedBrain['commonThemesIds']:
+                        byTheme[theme].append(annotatedBrain)
                     # break if we already have enough results for the given
                     # theme
                     if not len(byTheme[theme]) < limitResults:
@@ -202,7 +201,7 @@ class AutoRelated(object):
         # now we have the themes in a dictionary, put them in a list instead
         themes = []
         vocabFactory = getUtility(IVocabularyFactory, name="Allowed themes")
-        themeVocab = vocabFactory(self)
+        themesVocab = vocabFactory(self)
         contextThemes = self._contextThemes()
 
         for themename in contextThemes:
@@ -212,11 +211,11 @@ class AutoRelated(object):
                 # is no longer used on account of pour performance see ticket
                 # http://taskman.eionet.europa.eu/issues/7452
                 # disabled as part of ticket #13771
-                #url = IThemeMoreLink(self.context).url(themename)
+                # url = IThemeMoreLink(self.context).url(themename)
                 themes.append({'name': _(
-                    str(themeVocab.getTerm(themename).title)),
-                               'items': theme})
-                               #'more_link': url }) # disabled url see comment
+                    str(themesVocab.getTerm(themename).title)),
+                        'items': theme})
+                        #'more_link': url }) # disabled url see above comment
 
         for dicts in themes:
             # 9272 reverse sort of latest addition
