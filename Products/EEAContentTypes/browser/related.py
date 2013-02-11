@@ -22,6 +22,9 @@ from zope.component import (
 )
 from zope.interface import implements
 
+import logging
+
+logger = logging.getLogger('Products.EEAContentTypes.related')
 
 TOP_VIDEOS = 3
 MEDIA_ORDER = ['video']
@@ -162,13 +165,14 @@ class AutoRelated(object):
         # doesn't return latest item found at
         # www/SITE/themes/natural/publications
         # which was www/SITE/publications/consumption-and-the-environment-2012
+        logger.info('called sameTypeByTheme')
         limitResults = limitResults or 3
         result = self.sameTheme(portal_type=self.context.portal_type,
                                 limitResults=limitResults)
         byTheme = {}
         brainsWithMultipleThemes = []
-        for i in range(0, len(result)):
-            annotatedBrain = result[i]
+        for index, brain in enumerate(result):
+            annotatedBrain = brain
             themes = annotatedBrain['commonThemesIds']
             theme = themes[0]
             themeObjs = byTheme.get(theme, [])
@@ -204,11 +208,15 @@ class AutoRelated(object):
         for themename in contextThemes:
             theme = byTheme.get(themename, None)
             if theme:
-                url = IThemeMoreLink(self.context).url(themename)
+                # disabled as auto relation macro from document_relateditems
+                # is no longer used on account of pour performance see ticket
+                # http://taskman.eionet.europa.eu/issues/7452
+                # disabled as part of ticket #13771
+                #url = IThemeMoreLink(self.context).url(themename)
                 themes.append({'name': _(
                     str(themeVocab.getTerm(themename).title)),
-                               'items': theme,
-                               'more_link': url })
+                               'items': theme})
+                               #'more_link': url }) # disabled url see comment
 
         for dicts in themes:
             # 9272 reverse sort of latest addition
