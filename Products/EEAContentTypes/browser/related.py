@@ -108,7 +108,7 @@ def annotateBrainInfo(info, request, urlOnly=None):
         if not urlOnly:
             imgview = queryMultiAdapter((obj, request), name="imgview")
             info['has_img'] = (imgview != None and imgview.display() == True)
-            info['item_mimetype'] = obj.get_content_t_cachedype()
+            info['item_mimetype'] = obj.get_content_type()
         info['url'] = url
 
 
@@ -205,8 +205,6 @@ class AutoRelated(object):
                     if not len(byTheme[theme]) < limitResults:
                         break
 
-        #annotateByThemeInfo(byTheme, self.request)
-
         # now we have the themes in a dictionary, put them in a list instead
         themes = []
         vocabFactory = getUtility(IVocabularyFactory, name="Allowed themes")
@@ -293,7 +291,7 @@ class AutoRelated(object):
         the normal API, to emphasize that it doesn't return full info.
 
         """
-        if portal_type == None:
+        if not portal_type:
             portal_type = self.context.portal_type
         result = IRelations(self.context).getItems(portal_type,
                                                   getBrains=True,
