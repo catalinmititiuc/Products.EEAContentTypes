@@ -61,9 +61,11 @@ class IRelations(Interface):
     def forwardReferences():
         """ Gets all objects that this object has references to. """
 
-    def autoContextReferences():
+    def autoContextReferences(portal_type):
         """ Gets all objects that are referenced from this objects
-        backreferences.
+        back references.
+        Can take portal_type parameter to designate the type of objects that
+        the back references should search for
         """
 
     def byTheme(samePortalType=False, getBrains=False, constraints=False):

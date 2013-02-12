@@ -103,10 +103,13 @@ class Relations(object):
                 contextThemes = theme.tags
             query['getThemes'] = contextThemes
 
+        queryThemesSeparately = False
         if constraints:
             # add 1 more to limit since we might get contextPath as result
-            if constraints['sort_limit']:
+            if constraints.get('sort_limit'):
                 constraints['sort_limit'] += 1
+            if constraints.get('queryThemesSeparately'):
+                queryThemesSeparately = True
             query.update(constraints)
 
         if portal_type:
@@ -121,7 +124,9 @@ class Relations(object):
             query['portal_type'] = portal_type
 
         res = []
-        if theme:
+        # split getThemes query only if we have the queryThemesSeparately flag 
+        # enabled 
+        if theme and queryThemesSeparately:
             for item in contextThemes:
                 query['getThemes'] = item
                 res.extend(catalog.searchResults(query))

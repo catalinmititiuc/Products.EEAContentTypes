@@ -130,7 +130,7 @@ def annotateThemeInfos(themeinfos, request):
 
 
 def filterDuplicates(items):
-    """ filter duplicates
+    """ filter duplicates by overriding uid keys with latest dict value
     """
     uids = {}
     for i in items:
@@ -171,7 +171,8 @@ class AutoRelated(object):
         # doesn't return latest item found at
         # www/SITE/themes/natural/publications
         # which was www/SITE/publications/consumption-and-the-environment-2012
-        defaultConstraints = {'review_state': 'published', 'sort_limit': 3}
+        defaultConstraints = {'review_state': 'published', 'sort_limit': 3,
+                              'queryThemesSeparately': True}
         if constraints:
             defaultConstraints.update(constraints)
         limitResults = defaultConstraints['sort_limit']
@@ -238,9 +239,9 @@ class AutoRelated(object):
         the normal API, to emphasize that it doesn't return full info.
         """
         result = IRelations(self.context).byTheme(portal_type,
-                                                  getBrains=True,
-                                                  considerDeprecated=True,
-                                                  constraints=constraints)
+                                      getBrains=True,
+                                      considerDeprecated=True,
+                                      constraints=constraints)
 
         contextThemes = self._contextThemes()
         related = []
@@ -252,14 +253,22 @@ class AutoRelated(object):
                                             'typesUseViewActionInListings', ())
 
         for item in result:
+            # #13771 commented this check introduced in changeset 12733 since
+            # auto-content is being called from video_popup_view which adds
+            # Article as portal_type to check and auto-context calls sameTheme
+
             # skip articles from auto related by theme since they are related
             # by publication group
-            if item.portal_type == 'Article':
-                continue
+            #if item.portal_type == 'Article':
+            #    continue
 
-            if item.getId != self.context.getId():
-                commonThemesIds = [ theme for theme in item.getThemes
-                                    if theme in contextThemes ]
+
+            # check if path isn't the same between brain and context instead
+            # of getId since we can have results that have the same id but not
+            # path for instance in videos there are multiple 'video-file' ids
+            if item.getPath() != self.context.absolute_url(1):
+                commonThemesIds = [theme for theme in item.getThemes
+                                    if theme in contextThemes]
                 #info = getObjectInfo(item.getObject(), self.request)
                 # pass typesUsingViewUrl to getBrainInfo so we no longer have
                 # to wake up objects for getting the urlview
@@ -269,17 +278,24 @@ class AutoRelated(object):
 
         return related
 
-    def autoContext(self, portal_type=None, fill_limit=0):
+    def autoContext(self, portal_type=None, fill_limit=None):
         """NOTE: returns full info. May end up being slow
         """
+        fill_limit = fill_limit or 25
         refs = IRelations(self.context).autoContextReferences(portal_type)
         refs = [getObjectInfo(i, self.request) for i in refs]
-        theme = self.sameTheme(portal_type)
+        defaultConstraints = {'review_state': 'published',
+                              'sort_limit': fill_limit}
+        theme = self.sameTheme(portal_type, constraints=defaultConstraints)
         items = refs + theme
-        if len(items) < fill_limit:
-            items += self.sameType(portal_type)
+        items_len = len(items)
+        if items_len < fill_limit:
+            # add the remainder of fill_limit - items length to the original
+            # fill_limit if we need more items
+            defaultConstraints['sort_limit'] = fill_limit + (fill_limit -
+                                                             items_len)
+            items += self.sameType(portal_type, constraints=defaultConstraints)
         nondups = filterDuplicates(items)
-        annotateThemeInfos(nondups, self.request)
         return nondups
 
     def sameType(self, portal_type=None, constraints=None):
