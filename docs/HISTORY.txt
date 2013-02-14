@@ -3,6 +3,14 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Change: optimized smartfolder.py logic responsible for latest events popup
+  from cross_site_top
+  [ichimdav #13771]
+* Change: optimized sameTypeByTheme which is responsible for the latest 
+  addition portlet logic
+  [ichimdav #13771]
+* Change: optimized autoContext relations which is called on video_popup_view
+  [ichimdav #13771]
 * Bug fix: getattr isCanonical for the relations canonical check to avoid 
   portal_relations error
   [ichimdav]
