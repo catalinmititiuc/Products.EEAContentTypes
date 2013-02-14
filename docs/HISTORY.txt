@@ -3,6 +3,9 @@ Changelog
 
 6.0-dev - (unreleased)
 ----------------------
+* Bug fix: getattr isCanonical for the relations canonical check to avoid 
+  portal_relations error
+  [ichimdav]
 * Change: disabled eea_keywords macro setting for subject since we already 
   provide a different macro with the eea.tags widget
   [ichimdav #13771]

@@ -219,7 +219,6 @@ class RequiredSchemaModifier(object):
                 if self.context != canonical:
                     # Language independent doesn't work with required property
                     return
-
         if 'location' in schema and self.context.portal_type != 'Data':
             xfield = schema['location']
             xfield.required = True
@@ -385,7 +384,8 @@ class GetCanonicalRelations(object):
 
     def __call__(self, **kwargs):
         tabs = {}
-
+        if not getattr(self.context, 'isCanonical', None):
+            return tabs
         if self.context.isCanonical():
             # Canonical object, we return nothing
             return None
