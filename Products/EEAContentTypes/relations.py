@@ -93,8 +93,9 @@ class Relations(object):
 
         query = { 'sort_on': 'effective',
                   'sort_order': 'reverse',
-                  'Language': self.context.getLanguage(),
                   'effectiveRange': DateTime()}
+        if getattr(self.context, 'getLanguage', None):
+            query['Language'] = self.context.getLanguage()
 
         if theme:
             if considerDeprecated:
