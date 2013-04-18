@@ -3,6 +3,8 @@ Changelog
 
 6.6-dev - (unreleased)
 ----------------------
+* Change: refactor marshaller.py to conform to eea.versions API changes
+  [tiberich #14008]
 
 6.5 - (2013-04-17)
 ------------------

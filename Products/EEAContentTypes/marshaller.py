@@ -5,13 +5,10 @@ from Products.Archetypes.interfaces import IField
 from eea.rdfmarshaller.archetypes.fields import ATField2Surf
 from eea.rdfmarshaller.interfaces import ISurfResourceModifier
 from eea.rdfmarshaller.interfaces import ISurfSession
-from eea.versions.interfaces import IVersionEnhanced
-from eea.versions.versions import get_versions_api
+from eea.versions.interfaces import IVersionEnhanced, IGetVersions
 from zope.component import adapts
 from zope.interface import implements, Interface
 import rdflib
-
-#from eea.geotags.interfaces import IGeoTags
 
 
 class VersioningModifier(object):
@@ -27,11 +24,13 @@ class VersioningModifier(object):
     def run(self, resource, *args, **kwds):
         """change the rdf resource
         """
-        api = get_versions_api(self.context)
+        api = IGetVersions(self.context)
 
+        newer = api.later_versions()
+        older = api.earlier_versions()
         resource.dcterms_isReplacedBy = [rdflib.URIRef(i['url']) for
-                                                        i in api.newest()]
-        resource.dcterms_replaces = [rdflib.URIRef(a['url']) for a in api.oldest()]
+                                                        i in newer]
+        resource.dcterms_replaces = [rdflib.URIRef(a['url']) for a in older]
 
         resource.save()
 
