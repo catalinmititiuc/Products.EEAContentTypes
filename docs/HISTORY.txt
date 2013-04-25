@@ -5,6 +5,13 @@ Changelog
 ----------------------
 * Change: refactor marshaller.py to conform to eea.versions API changes
   [tiberich #14008]
+* Upgrade step: Within "Plone > Site setup > Add-ons" click on
+  upgrade button available for EEA Content Types
+  [voineali refs #9552]
+* Cleanup: Remove "eea.related_multimedia" viewlet
+  [voineali refs #9552]
+* Added upgrade to cleanup tags
+  [ghicaale refs #14383]
 
 6.5 - (2013-04-17)
 ------------------

@@ -3,13 +3,49 @@
            i18n_domain="eea">
 
   <genericsetup:upgradeSteps
-    source="*"
-    destination="4.0"
+    source="5.2"
+    destination="6.6"
+    profile="Products.EEAContentTypes:default">
+
+    <genericsetup:upgradeStep
+      title="Cleanup 'eea.related_multimedia' viewlet"
+      handler=".evolve66.cleanup_viewlets"
+      />
+
+    <genericsetup:upgradeStep
+      title="Update existing tags based on #14383"
+      handler=".evolve66.update_tags"
+      />
+
+  </genericsetup:upgradeSteps>
+
+  <genericsetup:upgradeSteps
+    source="4.19"
+    destination="5.2"
+    profile="Products.EEAContentTypes:default">
+
+    <genericsetup:upgradeStep
+      title="Remove email transform"
+      description="Remove protect email transform"
+      handler="Products.EEAContentTypes.setuphandlers.unregister_email_transform"
+      />
+
+    <genericsetup:upgradeStep
+      title="Fix html_eea_chain transform"
+      description="Remove from html_eea_chain transform chain absolete transforms like html-to-captioned, captioned-to-html and protect_email"
+      handler="Products.EEAContentTypes.setuphandlers.fix_html_eea_chain_transform"
+      />
+
+  </genericsetup:upgradeSteps>
+
+  <genericsetup:upgradeSteps
+    source="4.16"
+    destination="4.19"
     profile="Products.EEAContentTypes:default">
 
     <genericsetup:upgradeDepends
-      title="Import all steps from Products.EEAContentTypes profile"
-      import_profile="Products.EEAContentTypes:default"
+      title="Add new CloudVideo ContentType from EEAContentTypes"
+      import_profile="Products.EEAContentTypes:eeacontenttypes_upgrade_4.19"
       />
 
   </genericsetup:upgradeSteps>
@@ -34,32 +70,13 @@
   </genericsetup:upgradeSteps>
 
   <genericsetup:upgradeSteps
-    source="4.16"
-    destination="4.19"
+    source="*"
+    destination="4.0"
     profile="Products.EEAContentTypes:default">
 
     <genericsetup:upgradeDepends
-      title="Add new CloudVideo ContentType from EEAContentTypes"
-      import_profile="Products.EEAContentTypes:eeacontenttypes_upgrade_4.19"
-      />
-
-  </genericsetup:upgradeSteps>
-
-  <genericsetup:upgradeSteps
-    source="4.19"
-    destination="5.2"
-    profile="Products.EEAContentTypes:default">
-
-    <genericsetup:upgradeStep
-      title="Remove email transform"
-      description="Remove protect email transform"
-      handler="Products.EEAContentTypes.setuphandlers.unregister_email_transform"
-      />
-
-    <genericsetup:upgradeStep
-      title="Fix html_eea_chain transform"
-      description="Remove from html_eea_chain transform chain absolete transforms like html-to-captioned, captioned-to-html and protect_email"
-      handler="Products.EEAContentTypes.setuphandlers.fix_html_eea_chain_transform"
+      title="Import all steps from Products.EEAContentTypes profile"
+      import_profile="Products.EEAContentTypes:default"
       />
 
   </genericsetup:upgradeSteps>

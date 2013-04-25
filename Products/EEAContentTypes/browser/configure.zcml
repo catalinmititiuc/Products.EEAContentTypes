@@ -13,15 +13,6 @@
         />
 
     <browser:viewlet
-        name="eea.related_multimedia"
-        for="*"
-        manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
-        layer="eea.design.browser.interfaces.IEEACommonLayer"
-        template="related_multimedia.pt"
-        permission="zope.Public"
-        />
-
-    <browser:viewlet
         name="eea.related_bytheme"
         for="*"
         manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
