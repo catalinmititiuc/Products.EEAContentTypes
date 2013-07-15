@@ -119,31 +119,6 @@
         allowed_interface=".interfaces.ICFTRegistration"
         />
 
-    <!-- RSS related -->
-    <browser:page
-        for="*"
-        name="rssFeeds"
-        class=".rss.RSSFeeds"
-        permission="zope.Public"
-        attribute="getFeeds"
-        />
-
-    <browser:page
-        for="*"
-        name="rssDblFeeds"
-        class=".rss.RSSFeeds"
-        permission="zope.Public"
-        attribute="getDblFeeds"
-        />
-
-    <browser:page
-        for="*"
-        name="rssMain"
-        class=".rss.RSSShare"
-        permission="zope.Public"
-        attribute="main"
-        />
-
 
     <!-- Related flash -->
     <browser:page
