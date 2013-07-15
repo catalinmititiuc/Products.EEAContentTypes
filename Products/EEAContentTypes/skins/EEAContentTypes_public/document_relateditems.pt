@@ -71,37 +71,6 @@
         </dd>
 </dl>
 
-<div metal:define-macro="feeds"
-    tal:define="feeds context/@@document_related/feeds|python:[];
-                Batch python: modules['Products.CMFPlone'].Batch;
-                b_size python: 20;
-                b_start python: 0;
-                b_start request/b_start | b_start;
-                batch python: Batch(feeds, b_size, int(b_start), orphan=1)"
-    tal:condition="feeds">
-
-    <div metal:use-macro="here/batch_macros/macros/navigation" />
-    <dl class="portlet portlet-rss">
-        <tal:block tal:repeat="item batch">
-            <dt class="portletItem">
-               <span class="figure-right"
-                      tal:condition="item/image">
-                    <span class="figure">
-                        <a tal:attributes="href item/url;title item/title;"><img tal:attributes="src item/image;alt item/title;" /> </a>
-                    </span>
-                </span>
-                <a tal:attributes="href item/url" tal:content="structure item/title" > Title </a>
-            </dt>
-            <dd tal:content="item/coverage"
-                tal:condition="item/coverage"> Coverage </dd>
-            <dd class="portletSeparator" />
-        </tal:block>
-    </dl>
-
-    <div metal:use-macro="here/batch_macros/macros/navigation" />
-</div>
-
-
 <metal:autorelated define-macro="auto">
 <tal:auto
     tal:define="themes context/@@auto_related/sameTypeByTheme"

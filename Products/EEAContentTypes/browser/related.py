@@ -1,12 +1,9 @@
 """ Related
 """
 from Products.CMFCore.utils import getToolByName
-from Products.EEAContentTypes.interfaces import IFeedPortletInfo, IRelations
+from Products.EEAContentTypes.interfaces import IRelations
 from Products.Five.browser import BrowserView
 from eea.mediacentre.interfaces import IMediaType
-from eea.rdfrepository.interfaces import IFeed, IFeedDiscover
-from eea.rdfrepository.plugins.discover import DiscoverPlugin
-from eea.rdfrepository.utils import getFeedItemsWithoutDuplicates
 from eea.themecentre.interfaces import IThemeMoreLink
 from eea.themecentre.interfaces import IThemeTagging
 from eea.translations import _
@@ -466,41 +463,6 @@ class DocumentRelated(BrowserView):
             media_list.append({ 'title': category.capitalize() + 's',
                                 'links': media[category] })
         return media_list
-
-    def feeds(self):
-        """ Feeds
-        """
-        entries = []
-
-        theme = queryAdapter(self.context, IThemeTagging)
-        if theme and len(theme.tags) > 0:
-            # we will only discover on first/one theme
-            # TODO: fix discovery to handle more themes at once
-            theme = theme.tags[0]
-            discover = DiscoverPlugin()
-        else:
-            theme = None
-
-        for feed in self.related_feeds:
-            if theme is not None:
-                discover_tags = IFeedDiscover(feed).search_attrs
-                if len(discover_tags) > 0:
-                    feeds = discover.getFeeds(search={ 'theme' : theme,
-                                                        'id' : feed.getId() })
-                    if len(feeds) > 0:
-                        feed = feeds[0]
-                    else:
-                        continue
-
-            info = IFeedPortletInfo(IFeed(feed))
-            for item in info.items:
-                entries.append(item)
-
-        entries.sort(cmp=lambda x, y:-cmp(x.published_unparsed,
-                                          y.published_unparsed))
-        entries = getFeedItemsWithoutDuplicates(entries, sort=True,
-                                                published_attr=True)
-        return entries
 
     def mediacount(self):
         """ Count

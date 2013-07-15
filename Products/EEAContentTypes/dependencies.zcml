@@ -7,18 +7,14 @@
              file='meta.zcml' />
 
     <include package="Products.CMFPlone" />
-    <include package="Products.fatsyndication" />
-    <include package="bda.feed" />
     <include package="collective.monkeypatcher" />
     <include package="Products.EEAPloneAdmin" />
     <include package="Products.EEAPloneAdmin" file="patches.zcml" />
     <include package="Products.NavigationManager" />
     <include package="p4a.video" />
     <include package="eea.mediacentre" />
-    <include package="eea.rdfrepository" />
     <include package="cornerstone.feed.zope" />
     <include package="eea.rdfmarshaller" />
-    <include package="eea.rdfrepository" />
     <include package="eea.facetednavigation" />
     <include package="eea.facetednavigation.subtypes" />
     <include package="eea.promotion" />

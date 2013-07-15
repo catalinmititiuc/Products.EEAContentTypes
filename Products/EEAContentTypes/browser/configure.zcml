@@ -144,12 +144,6 @@
         attribute="main"
         />
 
-    <browser:page
-        for="*"
-        name="rdf_portlets"
-        class=".feeds.RDFPortlet"
-        permission="zope2.View"
-        />
 
     <!-- Related flash -->
     <browser:page
@@ -334,15 +328,6 @@
         name="latesthighlightsInEnglish_portlets"
         class=".smartfolder.LatestHighlightsSmartFolderPortlet"
         permission="zope2.Public"
-        />
-
-    <!-- rss syndication -->
-    <browser:page
-        for="*"
-        name="RSS2"
-        class="Products.fatsyndication.browser.feed.GenericFeedView"
-        permission="zope2.View"
-        attribute="rss"
         />
 
     <!-- notifications -->

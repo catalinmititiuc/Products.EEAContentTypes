@@ -3,8 +3,6 @@
 from DateTime import DateTime
 from Products.Five import BrowserView
 from Products.CMFCore.utils import getToolByName
-#from eea.rdfrepository.interfaces import IFeed
-#from Products.EEAContentTypes.interfaces import IFeedPortletInfo
 
 class RSSShare(BrowserView):
     """ RSS Share

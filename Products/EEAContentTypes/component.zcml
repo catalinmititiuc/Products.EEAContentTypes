@@ -11,18 +11,12 @@
     <subscriber factory=".marshaller.VersioningModifier"
                 for="eea.versions.interfaces.IVersionEnhanced"
                 provides="eea.rdfmarshaller.interfaces.ISurfResourceModifier" />
-                
+
     <subscriber handler=".events.handle_content_state_changed"
                 for="zope.interface.Interface Products.CMFCore.interfaces.IActionSucceededEvent"
                 />
 
     <adapter factory=".marshaller.MediaField2Surf" name="media" />
-
-    <adapter factory=".feeds.FeedPortletInfo" />
-    <adapter factory=".feeds.FeedItemPortletInfo" />
-    <adapter factory=".feeds.NavigationRootRDFPortletDataCollector" />
-    <adapter factory=".feeds.ContextAwareFeedPortletInfo"
-        provides="eea.rdfrepository.interfaces.IRDFPortletInfo" />
 
     <adapter factory=".relations.Relations" />
     <adapter factory=".promotion.Promotion" />
@@ -56,7 +50,7 @@
     <adapter name="eea.keywordsfield"
         for="Products.Archetypes.interfaces.IExtensibleMetadata"
         factory=".subtypes.KeywordsSchemaModifier" />
-        
+
     <!-- Required fields -->
 
     <!-- Article -->

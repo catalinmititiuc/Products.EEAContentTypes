@@ -7,31 +7,6 @@ class IEEAPloneSite(Interface):
     """
 
 
-class IFeedPortletInfo(Interface):
-    """ Any object that wants to be displayed in a themecentre portlet
-        should provide an adapter providing this interface. """
-
-    feed_id = Attribute("feed id")
-    title = Attribute("portlet title")
-    title_link = Attribute("portlet title link")
-    button_link = Attribute("feed button link")
-    more_link = Attribute("portlet more link")
-    items = Attribute("a list of portlet items")
-
-
-class IFeedItemPortletInfo(Interface):
-    """ Each item in the themecentre portlets provides this interface. """
-
-    title = Attribute("portlet item title")
-    description = Attribute("portlet item description")
-    url = Attribute("portlet item link")
-    detail = Attribute("portlet item detail")
-    image = Attribute("portlet item image")
-    coverage = Attribute("portlet coverage")
-    published = Attribute("published date")
-    summary = Attribute("feed item summary")
-
-
 class ITransitionLogicalGuard(Interface):
     """ Transition logical guard
     """

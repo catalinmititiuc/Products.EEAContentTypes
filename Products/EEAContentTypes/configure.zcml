@@ -20,7 +20,6 @@
     <include file="catalog.zcml" />
     <include file="component.zcml" />
     <include file="geoposition.zcml" />
-    <include file="rss.zcml" />
     <include file="workflow.zcml" />
 
     <cmf:registerDirectory name="EEAContentTypes"/>
@@ -28,25 +27,6 @@
     <cmf:registerDirectory name="EEAContentTypes_popupedit"/>
 
     <interface interface=".interfaces.IEEAPloneSite" />
-
-    <class class=".feeds.FeedPortletInfo">
-        <require permission="zope2.Public"
-                 interface=".interfaces.IFeedPortletInfo" />
-    </class>
-
-    <class class=".feeds.FeedItemPortletInfo">
-        <require permission="zope2.Public"
-                 interface=".interfaces.IFeedItemPortletInfo" />
-    </class>
-
-    <class class=".feeds.ContextAwareFeedPortletInfo">
-        <require permission="zope2.Public"
-                 interface="eea.rdfrepository.interfaces.IRDFPortletInfo" />
-
-        ZZZ: this is not supported by Zope 2
-        <!--<require permission="cmf.ModifyPortalContent"
-                     set_schema="eea.rdfrepository.interfaces.IRDFPortletInfo" />-->
-    </class>
 
     <subscriber for=".content.CFTRequestor.ICFTRequestor
                      zope.lifecycleevent.interfaces.IObjectModifiedEvent"
