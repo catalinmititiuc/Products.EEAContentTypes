@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<rss version="2.0"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  tal:define="feed view/feed;
+              dummy python:request.response.setHeader('Content-Type', 'text/xml');
+              ">
+  <channel>
+    <title tal:content="feed/title" />
+    <link tal:content="feed/link" />
+    <description tal:content="feed/description" />
+
+    <language tal:content="feed/language" />
+    <copyright tal:content="feed/rights" />
+    <generator>Plone</generator>
+    <image>
+      <title tal:content="feed/title" />
+      <url tal:content="string:${context/portal_url}/eea-print-logo.gif" />
+      <link tal:content="feed/link" />
+    </image>
+    <item tal:repeat="item feed/items">
+      <title tal:content="item/title" />
+      <link tal:content="item/link" />
+      <description tal:content="item/description" />
+      <pubDate tal:content="item/published/HTML4|item/modified/HTML4" />
+      <guid tal:content="item/guid|nothing" />
+      <author tal:content="item/author" />
+      <tal:repeat repeat="tag python:item.context.Subject()">
+        <category tal:content="tag">tag</category>
+      </tal:repeat>
+      <enclosure
+        tal:define="enclosure item/has_enclosure"
+        tal:condition="enclosure"
+        tal:attributes="url item/file_url;
+                        length item/file_length;
+                        type item/file_type;" />
+    </item>
+  </channel>
+</rss>

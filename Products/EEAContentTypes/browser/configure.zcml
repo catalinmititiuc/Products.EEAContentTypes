@@ -118,7 +118,14 @@
         permission="zope.Public"
         allowed_interface=".interfaces.ICFTRegistration"
         />
-
+    <!-- RSS2 alias for portal_syndication in Plone 4.3 -->
+    <browser:page
+      for="Products.CMFPlone.interfaces.syndication.ISyndicatable"
+      class="Products.CMFPlone.browser.syndication.views.FeedView"
+      name="RSS2"
+      permission="zope2.View"
+      template="rss.xml.pt"
+      />
 
     <!-- Related flash -->
     <browser:page
