@@ -2,6 +2,8 @@
 <rss version="2.0"
   xmlns:i18n="http://xml.zope.org/namespaces/i18n"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:atom="http://www.w3.org/2005/Atom"
   tal:define="feed view/feed;
               dummy python:request.response.setHeader('Content-Type', 'text/xml');
               ">
@@ -9,7 +11,9 @@
     <title tal:content="feed/title" />
     <link tal:content="feed/link" />
     <description tal:content="feed/description" />
-
+    <atom:link rel="self" type="application/rss+xml"
+      tal:attributes="href string:${feed/link}/${view/getViewName}"
+      />
     <language tal:content="feed/language" />
     <copyright tal:content="feed/rights" />
     <generator>Plone</generator>
@@ -20,21 +24,11 @@
     </image>
     <item tal:repeat="item feed/items">
       <title tal:content="item/title" />
-      <link tal:content="item/link" />
-      <description tal:define="obj nocall:item/context;
-                               imgview nocall:obj/@@imgview">
-        <tal:block condition="python:imgview.display('mini')">
-          <p><img tal:attributes="src python:imgview('mini').absolute_url()" /></p>
-          <p tal:content="item/description" />
-        </tal:block>
-        <tal:block condition="not:python:imgview.display('mini')">
-          <tal:block replace="item/description" />
-        </tal:block>
-      </description>
-
-      <pubDate tal:content="item/published/HTML4|item/modified/HTML4" />
+      <link tal:content="string:${item/link}?utm_source=EEASubscriptions&amp;utm_medium=RSSFeeds&amp;utm_campaign=Generic" />
       <guid tal:content="item/guid|nothing" />
-      <author tal:content="item/author" />
+      <description tal:content="python:view.getItemDescription(item)" />
+      <pubDate tal:content="python:view.dateFormatItem(item)" />
+      <dc:creator tal:content="item/author" />
       <tal:repeat repeat="tag python:item.context.Subject()">
         <category tal:content="tag">tag</category>
       </tal:repeat>

@@ -121,7 +121,7 @@
     <!-- RSS2 alias for portal_syndication in Plone 4.3 -->
     <browser:page
       for="Products.CMFPlone.interfaces.syndication.ISyndicatable"
-      class="Products.CMFPlone.browser.syndication.views.FeedView"
+      class=".syndication.EEAFeedView"
       name="RSS2"
       permission="zope2.View"
       template="rss.xml.pt"
