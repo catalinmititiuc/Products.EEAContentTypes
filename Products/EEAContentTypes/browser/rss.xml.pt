@@ -25,7 +25,7 @@
     <item tal:repeat="item feed/items">
       <title tal:content="item/title" />
       <link tal:content="string:${item/link}?utm_source=EEASubscriptions&amp;utm_medium=RSSFeeds&amp;utm_campaign=Generic" />
-      <guid tal:content="item/guid|nothing" />
+      <guid tal:content="string:${item/guid|nothing}?utm_source=EEASubscriptions&amp;utm_medium=RSSFeeds&amp;utm_campaign=Generic" />
       <description tal:content="python:view.getItemDescription(item)" />
       <pubDate tal:content="python:view.dateFormatItem(item)" />
       <dc:creator tal:content="item/author" />

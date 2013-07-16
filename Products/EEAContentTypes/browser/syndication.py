@@ -58,9 +58,9 @@ class EEAFeedView(FeedView):
             # field - if so then we show a resized version of the image
             result = '<p><img src="%s" /></p><p>%s</p>' % \
                      (img('mini').absolute_url(),
-                      self.context.Description())
+                      item.context.Description())
         else:
-            result = self.context.Description()
+            result = item.context.Description()
         return result
 
     def dateFormatItem(self, item):
