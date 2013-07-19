@@ -4,7 +4,7 @@ from App.Common import package_home
 from DateTime import DateTime
 from Products.EEAContentTypes.config import product_globals
 from Products.EEAContentTypes.tests.base import EEAContentTypeTestCase
-from Products.basesyndication.interfaces import IFeedEntry
+from Products.CMFPlone.browser.syndication.adapters import IFeedItem
 import os
 
 image = open(os.path.join(package_home(
@@ -64,11 +64,11 @@ class TestSyndication(EEAContentTypeTestCase):
     def testTitle(self):
         """ Title
         """
-        entry = IFeedEntry(self.folder.doc)
+        entry = IFeedItem(self.folder.doc)
         self.assertEquals(entry.getTitle(), 'Some Document')
 
 
-        entry = IFeedEntry(self.folder.event)
+        entry = IFeedItem(self.folder.event)
         # ichimdav location changes
         #'Some Event [37197 Hattorf am Harz, Germany]'
         self.assertEquals(entry.getTitle(),
@@ -77,10 +77,10 @@ class TestSyndication(EEAContentTypeTestCase):
     def testDate(self):
         """ Date
         """
-        entry = IFeedEntry(self.folder.doc)
+        entry = IFeedItem(self.folder.doc)
         self.assertEquals(entry.getEffectiveDate(), self.effective_date)
 
-        entry = IFeedEntry(self.folder.event)
+        entry = IFeedItem(self.folder.event)
         self.assertEquals(entry.getEffectiveDate(), self.start_date)
 
     def testFolderThumb(self):
@@ -89,7 +89,7 @@ class TestSyndication(EEAContentTypeTestCase):
         # simulate publications which are folders
         self.folder.invokeFactory(
             'Image', id='img1', image=image, title='Simple Image')
-        entry = IFeedEntry(self.folder)
+        entry = IFeedItem(self.folder)
         self.failUnless('img' in entry.getBody())
 
     def testHighlightThumb(self):
@@ -98,7 +98,7 @@ class TestSyndication(EEAContentTypeTestCase):
         highlight = self.folder[self.folder.invokeFactory(
             'Highlight', id='h1',  title='Highlight')]
         highlight.setImage(image)
-        entry = IFeedEntry(highlight)
+        entry = IFeedItem(highlight)
         self.failUnless('img' in entry.getBody())
 
 
