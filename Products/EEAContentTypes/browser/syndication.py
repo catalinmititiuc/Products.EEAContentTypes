@@ -6,6 +6,7 @@ from zope.component import queryMultiAdapter
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.browser.syndication.views import FeedView
 
+
 class SKOS(object):
     """ Browser view for generating a SKOS feed from an ATTopic. """
 
@@ -39,15 +40,16 @@ class SKOS(object):
             prefLabels = []
             for lang, obj_list in languages.items():
                 prefLabel = {'language': lang,
-                             'title': obj_list[0].Title() }
+                             'title': obj_list[0].Title()}
                 prefLabels.append(prefLabel)
 
             concept = {'url': obj.absolute_url(),
                        'prefLabels': prefLabels,
-                       'definition': obj.Description() }
+                       'definition': obj.Description()}
             concepts.append(concept)
 
         return concepts
+
 
 class EEAFeedView(FeedView):
     def getItemDescription(self, item):

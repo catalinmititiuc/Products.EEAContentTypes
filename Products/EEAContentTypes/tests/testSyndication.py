@@ -1,10 +1,14 @@
 """ Syndication tests
 """
+from zope.component import queryMultiAdapter
+
 from App.Common import package_home
 from DateTime import DateTime
 from Products.EEAContentTypes.config import product_globals
 from Products.EEAContentTypes.tests.base import EEAContentTypeTestCase
+from Products.CMFPlone.browser.syndication.adapters import IFeed
 from Products.CMFPlone.browser.syndication.adapters import IFeedItem
+from Products.CMFPlone.browser.syndication.adapters import BaseItem
 import os
 
 image = open(os.path.join(package_home(
@@ -61,27 +65,33 @@ class TestSyndication(EEAContentTypeTestCase):
         event.setStartDate(self.start_date)
         event.reindexObject()
 
+    def getFeedItem(self, context, doc):
+        adapter = queryMultiAdapter((doc, context), IFeedItem)
+        if adapter is None:
+            adapter = BaseItem(doc, context)
+        return adapter
+
     def testTitle(self):
         """ Title
         """
-        entry = IFeedItem(self.folder.doc)
-        self.assertEquals(entry.getTitle(), 'Some Document')
+        entry = self.getFeedItem(self.folder, self.folder.doc)
+        self.assertEquals(entry.title, 'Some Document')
 
-
-        entry = IFeedItem(self.folder.event)
-        # ichimdav location changes
-        #'Some Event [37197 Hattorf am Harz, Germany]'
-        self.assertEquals(entry.getTitle(),
-                          'Some Event')
+        entry = self.getFeedItem(self.folder, self.folder.event)
+        self.assertEquals(entry.title, 'Some Event')
 
     def testDate(self):
         """ Date
         """
-        entry = IFeedItem(self.folder.doc)
-        self.assertEquals(entry.getEffectiveDate(), self.effective_date)
+        entry = self.getFeedItem(self.folder, self.folder.doc)
+        ed = self.effective_date.asdatetime().replace(microsecond=0)
+        effective_date = DateTime(ed)
+        self.assertEquals(entry.published, effective_date)
 
-        entry = IFeedItem(self.folder.event)
-        self.assertEquals(entry.getEffectiveDate(), self.start_date)
+        entry = self.getFeedItem(self.folder, self.folder.event)
+        sd = self.folder.event.start().asdatetime().replace(microsecond=0)
+        start_date = DateTime(sd)
+        self.assertEquals(entry.published, start_date)
 
     def testFolderThumb(self):
         """ Folder thumb
@@ -89,8 +99,9 @@ class TestSyndication(EEAContentTypeTestCase):
         # simulate publications which are folders
         self.folder.invokeFactory(
             'Image', id='img1', image=image, title='Simple Image')
-        entry = IFeedItem(self.folder)
-        self.failUnless('img' in entry.getBody())
+        view = self.folder.restrictedTraverse('@@RSS2')
+        entry = self.getFeedItem(self.folder, self.folder)
+        self.failUnless('img' in view.getItemDescription(entry))
 
     def testHighlightThumb(self):
         """ Highlight thumb
@@ -98,8 +109,9 @@ class TestSyndication(EEAContentTypeTestCase):
         highlight = self.folder[self.folder.invokeFactory(
             'Highlight', id='h1',  title='Highlight')]
         highlight.setImage(image)
-        entry = IFeedItem(highlight)
-        self.failUnless('img' in entry.getBody())
+        view = highlight.restrictedTraverse('@@RSS2')
+        entry = self.getFeedItem(self.folder, highlight)
+        self.failUnless('img' in view.getItemDescription(entry))
 
 
 def test_suite():
