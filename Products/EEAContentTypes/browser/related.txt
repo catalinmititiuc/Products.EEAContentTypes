@@ -1,3 +1,39 @@
+Related view groups related items in types and categories.
+
+If you related a IVideo, up to 3 of them that can be played inline are grouped 
+in group. Each Video can be categorized and the order in the group is decided
+by the category.
+
+Lets relate a video to the document
+
+  >>> self.portal.manage_delObjects('front-page')
+  >>> doc = self.folder.doc1
+  >>> video = self.folder.video1
+
+  >>> from Products.EEAContentTypes.browser.interfaces import IDocumentRelated
+  >>> from zope.component import getMultiAdapter
+  >>> related = getMultiAdapter((doc, self.portal.REQUEST), name="document_related")
+  >>> len(related.top_media())
+  0
+  >>> related.top_count()
+  0
+
+There is no page related to this document yet, only video and feed:
+
+  >>> len(related.pages())
+  0
+
+By adding a reference from another document to this one we do get a relation:
+
+  >>> self.folder.backref1.setRelatedItems([doc])
+  >>> related = getMultiAdapter((doc, self.portal.REQUEST), name="document_related")
+  >>> len(related.pages())
+  1
+
+
+Auto related
+============
+
 All contentypes can have a auto related portlet. This portlet displays a list
 of objects of the same type and the same themes.
 
