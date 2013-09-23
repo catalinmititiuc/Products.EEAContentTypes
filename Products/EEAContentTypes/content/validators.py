@@ -281,7 +281,9 @@ class ExistsKeyFactsValidator:
             folder = instance.get('key-facts')
             if not folder:
                 folder = instance
-            folder_children = folder.objectValues(portal_type="SOERKeyFact")
+            folder_children = folder.getFolderContents({"portal_type":
+                                                        "SOERKeyFact"})
+            folder_children = [brain.getObject() for brain in folder_children]
             existing_facts_len = 0
             existing_facts_updated = 0
             existing_facts = []
@@ -293,7 +295,7 @@ class ExistsKeyFactsValidator:
 
             children = []
             for i, nfact in enumerate(facts):
-                if nfact.tag != "li":
+                if nfact.tag == "ul":
                     children = nfact.getchildren()
                     for j, fact in enumerate(children):
                         new_facts, existing_facts_updated = self.createKeyFacts(
