@@ -199,13 +199,13 @@ class ExistsKeyFactsValidator:
         folder.invokeFactory(type_name="SOERKeyFact",
                              id=keyfact_id)
         soer_keyfact = folder.get(keyfact_id)
+        themes = folder.getField('themes').getRaw(folder)
+        tags = folder.Subject()
         soer_keyfact.processForm(data=1, metadata=1, values={
-            'title': (
-                keyfact_id
-            ),
-            'description': (
-                fact_text
-            ),
+            'title': keyfact_id,
+            'description': fact_text,
+            'subject': tags,
+            'themes': themes
         }
         )
         existing_facts.append(soer_keyfact)
