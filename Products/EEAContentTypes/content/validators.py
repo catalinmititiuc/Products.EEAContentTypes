@@ -189,12 +189,11 @@ class ExistsKeyFactsValidator:
         self.description = description
 
     @staticmethod
-    def createKeyFact(fact_text, folder, keyfact_id, wft, existing_facts):
+    def createKeyFact(fact_text, folder, keyfact_id, existing_facts):
         """
         :param fact_text: the text value of the html fact object
         :param folder: folder where SOERKeyFact will be created
         :param keyfact_id: pattern name of created facts
-        :param wft: portal_workflow tool
         :param existing_facts: the currently existing_facts
         """
         folder.invokeFactory(type_name="SOERKeyFact",
@@ -209,12 +208,11 @@ class ExistsKeyFactsValidator:
             ),
         }
         )
-        wft.doActionFor(soer_keyfact, 'publish')
         existing_facts.append(soer_keyfact)
 
     def createKeyFacts(self, existing_facts, existing_facts_len,
                        existing_facts_updated, fact, folder,
-                       i, wft):
+                       i):
         """
         :param existing_facts: existing soer keyfacts created within the
                key-facts folder
@@ -225,14 +223,13 @@ class ExistsKeyFactsValidator:
                 description needed for the soer keyfacts
         :param folder: the folder used for storing the keyfacts
         :param i: iterator value
-        :param wft: portal_workflow tool
         """
         keyfact_id = 'keyfact-%d' % (i + 1)
         keyfact = folder.get(keyfact_id, None)
         fact_text = unicode(fact.text_content())
         new_facts = False
         if not keyfact:
-            self.createKeyFact(fact_text, folder, keyfact_id, wft,
+            self.createKeyFact(fact_text, folder, keyfact_id,
                                existing_facts)
             new_facts = True
         else:
@@ -260,7 +257,7 @@ class ExistsKeyFactsValidator:
                 existing_facts_len += 1
                 keyfact_id = 'keyfact-%d' % existing_facts_len
                 new_facts = True
-                self.createKeyFact(fact_text, folder, keyfact_id, wft,
+                self.createKeyFact(fact_text, folder, keyfact_id,
                                    existing_facts)
         return new_facts, existing_facts_updated
 
@@ -281,7 +278,6 @@ class ExistsKeyFactsValidator:
         new_facts_len = 0
 
         if facts_length:
-            wft = getToolByName(instance, 'portal_workflow')
             if not instance.get('key-facts', None):
                 instance.invokeFactory(type_name="Folder", id="key-facts")
             folder = instance.get('key-facts')
@@ -304,7 +300,7 @@ class ExistsKeyFactsValidator:
                             existing_facts,
                             existing_facts_len,
                             existing_facts_updated,
-                            fact, folder, j, wft)
+                            fact, folder, j)
                         if new_facts:
                             existing_facts_len += 1
                             new_facts_len += 1
@@ -315,7 +311,7 @@ class ExistsKeyFactsValidator:
                             existing_facts,
                             existing_facts_len,
                             existing_facts_updated,
-                            nfact, folder, i, wft)
+                            nfact, folder, i)
                     else:
                         new_facts = False
                     if new_facts:
