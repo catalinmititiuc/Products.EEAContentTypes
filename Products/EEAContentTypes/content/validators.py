@@ -278,10 +278,10 @@ class ExistsKeyFactsValidator:
         new_facts_len = 0
 
         if facts_length:
-            if not instance.get('key-facts', None):
-                instance.invokeFactory(type_name="Folder", id="key-facts")
             folder = instance.get('key-facts')
-            folder_children = folder.objectValues()
+            if not folder:
+                folder = instance
+            folder_children = folder.objectValues(portal_type="SOERKeyFact")
             existing_facts_len = 0
             existing_facts_updated = 0
             existing_facts = []
