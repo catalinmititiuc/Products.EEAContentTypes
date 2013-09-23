@@ -229,7 +229,7 @@ class ExistsKeyFactsValidator:
         """
         keyfact_id = 'keyfact-%d' % (i + 1)
         keyfact = folder.get(keyfact_id, None)
-        fact_text = fact.text_content().encode('utf-8')
+        fact_text = unicode(fact.text_content())
         new_facts = False
         if not keyfact:
             self.createKeyFact(fact_text, folder, keyfact_id, wft,
@@ -239,7 +239,7 @@ class ExistsKeyFactsValidator:
             match = False
             for child in existing_facts:
                 description = child.getField('description')
-                description_text = description.getRaw(child)
+                description_text = description.getRaw(child).decode('utf-8')
                 match_ratio = difflib.SequenceMatcher(None,
                                                       description_text,
                                                       fact_text).ratio()
@@ -274,7 +274,7 @@ class ExistsKeyFactsValidator:
                 return 1
 
         # find content which has a keyFact class in order to add soer keyfacts
-        content = html.fromstring(value)
+        content = html.fromstring(value.decode('utf-8'))
         facts = content.find_class('keyFact')
         facts_length = len(facts)
 
@@ -324,11 +324,11 @@ class ExistsKeyFactsValidator:
 
             status = IStatusMessage(instance.REQUEST)
             if new_facts_len:
-                msg = u"%d Newly Soer KeyFacts have been created in the " \
-                      u"'key-facts' folder of this content type" % new_facts_len
+                msg = u"Key facts have been extracted and stored from this " \
+                    u"page. You may 'manage key facts' through the contents tab"
                 status.add(_(msg))
             if existing_facts_updated:
-                msg = u"%d Soer KeyFacts have been updated in the " \
+                msg = u"%d SOER KeyFacts have been updated in the " \
                       u"'key-facts' folder of this content type" % \
                       existing_facts_updated
                 status.add(_(msg))
