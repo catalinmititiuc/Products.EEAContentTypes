@@ -3,6 +3,9 @@ Changelog
 
 7.5-dev - (unreleased)
 ----------------------
+* Bug fix: check if relation exists as getBrefs could return None values when 
+  computing forward and backward relations for non english objects
+  [ichimdav refs #16803]
 * Feature: Assigned versionId to PloneGazette Newsletter and NewsletterTheme through
   upgrade step.
   [tiberich #16776]
