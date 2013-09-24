@@ -412,32 +412,33 @@ class GetCanonicalRelations(object):
                 nonForwardRelations = set()
                 for relation in rel_forwards:
                     # Get the relation type name
-                    if relation:
-                        portalType = relation.portal_type
-                        if portalType in nonForwardRelations:
-                            nonForwardRelations.add(portalType)
+                    if not relation:
+                        continue
+                    portalType = relation.portal_type
+                    if portalType in nonForwardRelations:
+                        nonForwardRelations.add(portalType)
+                        continue
+                    if portalType not in contentTypes:
+                        forward = getForwardRelationWith(self.context, relation)
+                        if not forward:
                             continue
-                        if portalType not in contentTypes:
-                            forward = getForwardRelationWith(self.context,
-                                                             relation)
-                            if not forward:
-                                continue
-                            name = forward.getField('forward_label'
-                                                    ).getAccessor(forward)()
-                            contentTypes[portalType] = name
-                            tabs[name] = []
-                        name = contentTypes[portalType]
-                        # #14831 check if relations isn't already added since
-                        # you could receive a bunch of translations of a single
-                        # object which would result in duplication of relations
-                        context_relation = relation.getTranslation(lang)
-                        tab = tabs[name]
-                        if context_relation:
-                            if context_relation not in tab:
-                                tab.append(context_relation)
-                        else:
-                            if relation not in tab:
-                                tab.append(relation)
+                        name = forward.getField('forward_label').getAccessor(
+                        forward)()
+                        contentTypes[portalType] = name
+                        tabs[name] = []
+                    name = contentTypes[portalType]
+                    # #14831 check if relations isn't already added since you
+                    # could receive a bunch of translations of a single object
+                    # which would result in duplication of relations
+                    context_relation = relation.getTranslation(lang)
+                    tab = tabs[name]
+                    if context_relation:
+                        if context_relation not in tab:
+                            tab.append(context_relation)
+                    else:
+                        if relation not in tab:
+                            tab.append(relation)
+
             rel_backwards = canonical.getBRefs(kwargs.get('relation',
                                                           'relatesTo'))
             if rel_backwards:
@@ -446,30 +447,31 @@ class GetCanonicalRelations(object):
                 contentTypes = {}
                 nonBackwardRelations = set()
                 for relation in rel_backwards:
-                    if relation:
-                        portalType = relation.portal_type
-                        if portalType in nonBackwardRelations:
-                            nonBackwardRelations.add(portalType)
+                    if not relation:
+                        continue
+                    portalType = relation.portal_type
+                    if portalType in nonBackwardRelations:
+                        nonBackwardRelations.add(portalType)
+                        continue
+                    if portalType not in contentTypes:
+                        backward = getBackwardRelationWith(self.context,
+                                                           relation)
+                        if not backward:
                             continue
-                        if portalType not in contentTypes:
-                            backward = getBackwardRelationWith(self.context,
-                                                               relation)
-                            if not backward:
-                                continue
-                            name = backward.getField('backward_label'
-                                                     ).getAccessor(backward)()
-                            contentTypes[portalType] = name
-                            tabs[name] = []
-                        name = contentTypes[portalType]
+                        name = backward.getField('backward_label').getAccessor(
+                            backward)()
+                        contentTypes[portalType] = name
+                        tabs[name] = []
+                    name = contentTypes[portalType]
 
-                        context_relation = relation.getTranslation(lang)
-                        tab = tabs[name]
-                        if context_relation:
-                            if context_relation not in tab:
-                                tab.append(context_relation)
-                        else:
-                            if relation not in tab:
-                                tab.append(relation)
+                    context_relation = relation.getTranslation(lang)
+                    tab = tabs[name]
+                    if context_relation:
+                        if context_relation not in tab:
+                            tab.append(context_relation)
+                    else:
+                        if relation not in tab:
+                            tab.append(relation)
 
             if tabs:
                 return tabs.items()
