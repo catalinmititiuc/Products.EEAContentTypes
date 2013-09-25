@@ -278,9 +278,9 @@ class ExistsKeyFactsValidator:
         new_facts_len = 0
 
         if facts_length:
+            if not instance.get('key-facts', None):
+                instance.invokeFactory(type_name="Folder", id="key-facts")
             folder = instance.get('key-facts')
-            if not folder:
-                folder = instance
             folder_children = folder.getFolderContents({"portal_type":
                                                         "SOERKeyFact"})
             folder_children = [brain.getObject() for brain in folder_children]
