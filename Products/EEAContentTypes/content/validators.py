@@ -1,5 +1,6 @@
 """ Validators """
 import difflib
+from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.utils import getToolByName
 from Products.statusmessages.interfaces import IStatusMessage
 from Products.EEAContentTypes.config import EEAMessageFactory as _
@@ -278,9 +279,31 @@ class ExistsKeyFactsValidator:
         new_facts_len = 0
 
         if facts_length:
+            wftool = getToolByName(instance, 'portal_workflow')
             if not instance.get('key-facts', None):
                 instance.invokeFactory(type_name="Folder", id="key-facts")
             folder = instance.get('key-facts')
+            instance_review_state = wftool.getInfoFor(instance, 'review_state')
+            folder_review_state = wftool.getInfoFor(folder, 'review_state')
+            if instance_review_state != folder_review_state and \
+                    folder_review_state != 'published':
+                try:
+                    workflow = wftool.getWorkflowsFor(folder)[0]
+                    transitions = workflow.transitions
+                    available_transitions = [transitions[i['id']] for i in
+                                             wftool.getTransitionsFor(folder)]
+                    matching_transitions = [k for k in available_transitions
+                                            if k.new_state_id ==
+                                            instance_review_state]
+                    # attempt to give the same review_state for the folder as
+                    # it's parent's review_state
+                    for item in matching_transitions:
+                        wftool.doActionFor(folder, item.id)
+                        folder.reindexObject()
+                        break
+                except WorkflowException:
+                    pass
+
             folder_children = folder.getFolderContents({"portal_type":
                                                         "SOERKeyFact"})
             folder_children = [brain.getObject() for brain in folder_children]
