@@ -299,7 +299,6 @@ class ExistsKeyFactsValidator:
                     # it's parent's review_state
                     for item in matching_transitions:
                         wftool.doActionFor(folder, item.id)
-                        folder.reindexObject()
                         break
                 except WorkflowException:
                     pass
