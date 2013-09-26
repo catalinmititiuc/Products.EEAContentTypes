@@ -2,6 +2,16 @@
            xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
            i18n_domain="eea">
 
+    <genericsetup:upgradeSteps
+            source="7.4"
+            destination="7.6"
+            profile="Products.EEAContentTypes:default">
+
+        <genericsetup:upgradeStep
+                title="Reindex SOERKeyFact objects after removal of workflow"
+                handler=".evolve76.evolve"
+                />
+    </genericsetup:upgradeSteps>
    <!-- Disabled upgrade step of updating tags for the upgrade to Plone 4.3
     <genericsetup:upgradeStep
       title="Update existing tags based on #14383"
