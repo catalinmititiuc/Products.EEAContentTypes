@@ -75,4 +75,13 @@
             provides="Products.GenericSetup.interfaces.EXTENSION"
             />
 
+    <genericsetup:registerProfile
+            name="eeacontenttypes_upgrade_8.00"
+            title="Upgrade profile for EEAContentTypes 8.00"
+            description="This profile contains configuration changes from 7.9 to 8.0"
+            directory="profiles/upgrade/to_800"
+            provides="Products.GenericSetup.interfaces.EXTENSION"
+            />
+
+
 </configure>

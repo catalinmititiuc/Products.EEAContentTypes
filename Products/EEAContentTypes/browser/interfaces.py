@@ -320,14 +320,9 @@ class IEEAContentTypesSettings(Interface):
     )
 
 
-class IEEAContentTypesSettings2(IEEAContentTypesSettings):
+class IEEAContentRegistryRequiredFields(Interface):
+    """ Interface that will be used for requiring different fields for certain
+        contenttypes
+    """
 
-    hideTemporalCoveragesFor = schema.Tuple(
-        title=_(u"Hide Temporal Coverage Viewlets"),
-        description=_(u"Hide the Temporal Coverage Viewlet for the "
-                      "following content-typess"),
-        required=False,
-        default=('EEAFigure', 'Data', 'Assessment', 'IndicatorFactSheet'),
-        value_type=schema.Choice(
-            vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes")
-    )
+
