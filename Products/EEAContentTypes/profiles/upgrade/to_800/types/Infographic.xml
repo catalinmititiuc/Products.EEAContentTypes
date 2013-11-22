@@ -4,10 +4,10 @@
    i18n:domain="eea" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
   <property name="title" i18n:translate="">Infographic</property>
   <property name="description"
-    i18n:translate="">EEA SOER</property>
+    i18n:translate="">Infographic EEA ContentTypes</property>
   <property name="content_meta_type">Infographic</property>
   <property name="icon_expr">string:${portal_url}/++resource++eea.soercontent.images/icon.png</property>
-  <property name="product">eea.soercontent</property>
+  <property name="product">EEAContentTypes</property>
   <property name="factory">addInfographic</property>
   <property name="immediate_view">infographic_view</property>
   <property name="global_allow">True</property>

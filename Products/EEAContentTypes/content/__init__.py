@@ -8,6 +8,7 @@ from Products.EEAContentTypes.content import Article
 from Products.EEAContentTypes.content import CFTRequestor
 from Products.EEAContentTypes.content import CallForInterest
 from Products.EEAContentTypes.content import CallForTender
+from Products.EEAContentTypes.content import infographic
 from Products.EEAContentTypes.content import Event
 from Products.EEAContentTypes.content import ExternalHighlight
 from Products.EEAContentTypes.content import FlashFile
@@ -64,5 +65,6 @@ __all__ = [
     Link.__name__,
     PressRelease.__name__,
     Promotion.__name__,
-    validators.__name__
+    validators.__name__,
+    infographic.__name__
 ]
