@@ -5,7 +5,6 @@ from Products.Archetypes.Widget import MultiSelectionWidget
 from Products.Archetypes.interfaces import IBaseContent
 from Products.Archetypes.interfaces import ISchema
 from Products.EEAContentTypes.browser.interfaces import IEEAContentRegistryRequiredFields
-from Products.EEAContentTypes.config import REQUIRED_METADATA_FOR
 from Products.EEAContentTypes.utils import \
     excluded_temporal_coverage_schemaextender_tuple
 from Products.LinguaPlone.public import InAndOutWidget
@@ -321,7 +320,6 @@ class RequiredSchemaModifier(object):
                 if self.context != canonical:
                     # Language independent doesn't work with required property
                     return
-
         registry = getUtility(IRegistry)
         records = registry.records
         reg_name = IEEAContentRegistryRequiredFields.__identifier__
