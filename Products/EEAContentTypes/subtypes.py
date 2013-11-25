@@ -4,6 +4,7 @@ from Products.Archetypes.Widget import MultiSelectionWidget
 
 from Products.Archetypes.interfaces import IBaseContent
 from Products.Archetypes.interfaces import ISchema
+from Products.EEAContentTypes.browser.interfaces import IEEAContentRegistryRequiredFields
 from Products.EEAContentTypes.config import REQUIRED_METADATA_FOR
 from Products.EEAContentTypes.utils import \
     excluded_temporal_coverage_schemaextender_tuple
@@ -296,6 +297,8 @@ class ManagementPlanFieldExtender(object):
         """
         return self.fields
 
+from zope.component import getUtility
+from plone.registry.interfaces import IRegistry
 
 class RequiredSchemaModifier(object):
     """ Modify schema
@@ -318,18 +321,21 @@ class RequiredSchemaModifier(object):
                 if self.context != canonical:
                     # Language independent doesn't work with required property
                     return
-        if 'location' in schema and self.context.portal_type != 'Data':
-            xfield = schema['location'].copy()
-            xfield.required = True
-            schema['location'] = xfield
-        if 'themes' in schema:
-            xfield = schema['themes'].copy()
-            xfield.required = True
-            schema['themes'] = xfield
-        if 'subject' in schema:
-            xfield = schema['subject'].copy()
-            xfield.required = True
-            schema['subject'] = xfield
+
+        registry = getUtility(IRegistry)
+        records = registry.records
+        reg_name = IEEAContentRegistryRequiredFields.__identifier__
+        # required way to get the values that start with the name of the
+        #interface as seen in the doctests of plone.registry
+        values = records.values(reg_name + ".", reg_name + "0")
+        for value in values:
+            name = value.field.title
+            ctypes = value.value
+            if self.context.portal_type in ctypes:
+                if name in schema:
+                    xfield = schema[name].copy()
+                    xfield.required = True
+                    schema[name] = xfield
 
 
 class KeywordsSchemaModifier(object):

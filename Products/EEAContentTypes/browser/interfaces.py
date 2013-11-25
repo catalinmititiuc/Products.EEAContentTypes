@@ -319,10 +319,59 @@ class IEEAContentTypesSettings(Interface):
             vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes")
     )
 
+required_for_ctypes = ('Article', 'Highlight', 'PressRelease', 'Speech',
+                 'DiversityReport', 'Data', 'EEAFigure', 'Report',
+                 'PolicyDocumentReference', 'FlashFile', 'Infographic',
+                 'EcoTip', 'Page', 'SOERKeyFact', 'SOERMessage',
+                 'GIS+Application', 'EyewitnessStory',
+                 'CloudVideo')
 
 class IEEAContentRegistryRequiredFields(Interface):
     """ Interface that will be used for requiring different fields for certain
         contenttypes
     """
+
+    location = schema.Tuple(
+        title=_(u"location"),
+        description=_(u"Requires the location field for the "
+                      "following content-types"),
+        required=False,
+        default=required_for_ctypes,
+        value_type=schema.Choice(
+            vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes")
+    )
+
+    themes = schema.Tuple(
+        title=_(u"themes"),
+        description=_(u"Requires the themes field for the "
+                      "following content-types"),
+        required=False,
+        default=required_for_ctypes,
+        value_type=schema.Choice(
+            vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes")
+    )
+
+    subject = schema.Tuple(
+        title=_(u"subject"),
+        description=_(u"Requires the subject field for the "
+                      "following content-types"),
+        required=False,
+        default=required_for_ctypes,
+        value_type=schema.Choice(
+            vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes")
+    )
+
+    temporalCoverage = schema.Tuple(
+        title=_(u"temporalCoverage"),
+        description=_(u"Requires the temporalCoverage field for the "
+                      "following content-types"),
+        required=False,
+        default=('Infographic',),
+        value_type=schema.Choice(
+            vocabulary="plone.app.vocabularies.ReallyUserFriendlyTypes")
+    )
+
+
+
 
 

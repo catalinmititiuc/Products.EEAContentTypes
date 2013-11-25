@@ -1,17 +1,21 @@
 <registry>
 
-  <record  interface="Products.EEAContentTypes.browser.interfaces.IEEAContentRegistryRequiredFields" field="temporalCoverage" name="temporalCoverage">
-    <field type="plone.registry.field.Tuple">
-      <default>
-        <element>Infographic</element>
-      </default>
-      <description>temporalCoverage field is required for the following content types</description>
-      <title>Temporal Coverage</title>
-      <required>False</required>
-        <value_type type="plone.registry.field.Choice">
-            <vocabulary>plone.app.vocabularies.ReallyUserFriendlyTypes</vocabulary>
-        </value_type>
-    </field>
-  </record>
+    <!-- Example of ways to add record to a given interfaces through
+         registry.xml instead of appending fields to the interface -->
+  <!--<record  interface="Products.EEAContentTypes.browser.interfaces.IEEAContentRegistryRequiredFields" field="Products.EEAContentTypes.browser.interfaces.IEEAContentRegistryRequiredFields.temporalCoverage" name="Products.EEAContentTypes.browser.interfaces.IEEAContentRegistryRequiredFields.temporalCoverage" remove="True">-->
+    <!--<field type="plone.registry.field.Tuple">-->
+      <!--<default>-->
+        <!--<element>Infographic</element>-->
+      <!--</default>-->
+      <!--<description>temporalCoverage field is required for the following content types</description>-->
+      <!--<title>temporalCoverage</title>-->
+      <!--<required>False</required>-->
+        <!--<value_type type="plone.registry.field.Choice">-->
+            <!--<vocabulary>plone.app.vocabularies.ReallyUserFriendlyTypes</vocabulary>-->
+        <!--</value_type>-->
+    <!--</field>-->
+  <!--</record>-->
+
+    <records interface="Products.EEAContentTypes.browser.interfaces.IEEAContentRegistryRequiredFields"  />
 
 </registry>

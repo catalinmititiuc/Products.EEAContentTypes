@@ -63,57 +63,14 @@
         for="Products.Archetypes.interfaces.IExtensibleMetadata"
         factory=".subtypes.KeywordsSchemaModifier" />
 
-    <!-- Required fields -->
-
-    <!-- Article -->
-    <class class="Products.EEAContentTypes.content.Article.Article">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!-- Highlight -->
-    <class class="Products.EEAContentTypes.content.Highlight.Highlight">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!-- PressRelease -->
-    <class class="Products.EEAContentTypes.content.PressRelease.PressRelease">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!-- Speech -->
-    <class class="Products.EEAContentTypes.content.Speech.Speech">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!-- Country profile -->
-    <class class="eea.soer.content.DiversityReport.DiversityReport">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!-- Data -->
-    <class class="eea.dataservice.content.Data.Data">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!-- Figure -->
-    <class class="eea.dataservice.content.EEAFigure.EEAFigure">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!--Policy Document -->
-    <class class="eea.indicators.content.PolicyDocumentReference.PolicyDocumentReference">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
-    <!-- Animation -->
-    <class class="Products.EEAContentTypes.content.FlashFile.FlashFile">
-        <implements interface="Products.EEAContentTypes.interfaces.IRequiredFields" />
-    </class>
-
     <!-- Required fields adapter -->
     <adapter name="eea.requiredfields"
-        for="Products.EEAContentTypes.interfaces.IRequiredFields"
+        for="Products.EEAContentTypes.interfaces.IEEAContent"
         factory=".subtypes.RequiredSchemaModifier" />
+
+    <adapter name="eea.requiredfields4possiblecontenttypes"
+             for="Products.EEAContentTypes.interfaces.IEEAPossibleContent"
+             factory=".subtypes.RequiredSchemaModifier" />
 
     <!-- Publication -->
     <adapter name="eea.requiredfields4publication"
@@ -121,28 +78,28 @@
         factory=".subtypes.RequiredSchemaModifier" />
 
     <!-- Video -->
-    <adapter name="eea.requiredfields4video"
-        for="eea.mediacentre.interfaces.IVideo"
-        factory=".subtypes.RequiredSchemaModifier" />
+    <!--<adapter name="eea.requiredfields4video"-->
+        <!--for="eea.mediacentre.interfaces.IVideo"-->
+        <!--factory=".subtypes.RequiredSchemaModifier" />-->
 
-    <!-- Infographics -->
-    <adapter name="eea.requiredfields4infographics"
-             for="Products.EEAContentTypes.content.interfaces.IInfographic"
-             factory=".subtypes.RequiredSchemaModifier" />
+    <!--&lt;!&ndash; Infographics &ndash;&gt;-->
+    <!--<adapter name="eea.requiredfields4infographics"-->
+             <!--for="Products.EEAContentTypes.content.interfaces.IInfographic"-->
+             <!--factory=".subtypes.RequiredSchemaModifier" />-->
 
-    <!-- EcoTip, Page, SOER Key fact, SOER Message -->
-    <adapter name="eea.requiredfields4document"
-        for="Products.ATContentTypes.interfaces.IATDocument"
-        factory=".subtypes.RequiredByPortalTypeSchemaModifier" />
+    <!--&lt;!&ndash; EcoTip, Page, SOER Key fact, SOER Message &ndash;&gt;-->
+    <!--<adapter name="eea.requiredfields4document"-->
+        <!--for="Products.ATContentTypes.interfaces.IATDocument"-->
+        <!--factory=".subtypes.RequiredByPortalTypeSchemaModifier" />-->
 
-    <!-- Eyewitness story -->
-    <adapter name="eea.requiredfields4folder"
-        for="Products.ATContentTypes.interfaces.IATFolder"
-        factory=".subtypes.RequiredByPortalTypeSchemaModifier" />
+    <!--&lt;!&ndash; Eyewitness story &ndash;&gt;-->
+    <!--<adapter name="eea.requiredfields4folder"-->
+        <!--for="Products.ATContentTypes.interfaces.IATFolder"-->
+        <!--factory=".subtypes.RequiredByPortalTypeSchemaModifier" />-->
 
-    <!-- GIS Map Application -->
-    <adapter name="eea.requiredfields4link"
-        for="Products.ATContentTypes.interfaces.IATLink"
-        factory=".subtypes.RequiredByPortalTypeSchemaModifier" />
+    <!--&lt;!&ndash; GIS Map Application &ndash;&gt;-->
+    <!--<adapter name="eea.requiredfields4link"-->
+        <!--for="Products.ATContentTypes.interfaces.IATLink"-->
+        <!--factory=".subtypes.RequiredByPortalTypeSchemaModifier" />-->
 
 </configure>
