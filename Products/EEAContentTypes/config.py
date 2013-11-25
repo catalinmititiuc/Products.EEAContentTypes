@@ -38,8 +38,3 @@ DEPENDENCIES = [ 'ATVocabularyManager', ]
 # URL normalizer
 MAX_URL_WORDS = 5
 URL_ORPHANS = 1
-REQUIRED_METADATA_FOR = [
-    'EcoTip', 'Document', 'SOERKeyFact', 'SOERMessage',
-    'EyewitnessStory',
-    'GIS Application',
-]

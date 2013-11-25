@@ -77,29 +77,5 @@
         for="eea.reports.interfaces.IReportContainerEnhanced"
         factory=".subtypes.RequiredSchemaModifier" />
 
-    <!-- Video -->
-    <!--<adapter name="eea.requiredfields4video"-->
-        <!--for="eea.mediacentre.interfaces.IVideo"-->
-        <!--factory=".subtypes.RequiredSchemaModifier" />-->
-
-    <!--&lt;!&ndash; Infographics &ndash;&gt;-->
-    <!--<adapter name="eea.requiredfields4infographics"-->
-             <!--for="Products.EEAContentTypes.content.interfaces.IInfographic"-->
-             <!--factory=".subtypes.RequiredSchemaModifier" />-->
-
-    <!--&lt;!&ndash; EcoTip, Page, SOER Key fact, SOER Message &ndash;&gt;-->
-    <!--<adapter name="eea.requiredfields4document"-->
-        <!--for="Products.ATContentTypes.interfaces.IATDocument"-->
-        <!--factory=".subtypes.RequiredByPortalTypeSchemaModifier" />-->
-
-    <!--&lt;!&ndash; Eyewitness story &ndash;&gt;-->
-    <!--<adapter name="eea.requiredfields4folder"-->
-        <!--for="Products.ATContentTypes.interfaces.IATFolder"-->
-        <!--factory=".subtypes.RequiredByPortalTypeSchemaModifier" />-->
-
-    <!--&lt;!&ndash; GIS Map Application &ndash;&gt;-->
-    <!--<adapter name="eea.requiredfields4link"-->
-        <!--for="Products.ATContentTypes.interfaces.IATLink"-->
-        <!--factory=".subtypes.RequiredByPortalTypeSchemaModifier" />-->
 
 </configure>

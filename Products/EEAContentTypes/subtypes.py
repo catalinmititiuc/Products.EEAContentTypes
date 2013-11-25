@@ -362,19 +362,6 @@ class KeywordsSchemaModifier(object):
             schema['subject'].languageIndependent = True
 
 
-class RequiredByPortalTypeSchemaModifier(RequiredSchemaModifier):
-    """ Modify schema
-    """
-    implements(ISchemaModifier)
-
-    def fiddle(self, schema):
-        """ Fields
-        """
-        portal_type = getattr(self.context, 'portal_type', '')
-        if portal_type not in REQUIRED_METADATA_FOR:
-            return
-        return super(RequiredByPortalTypeSchemaModifier, self).fiddle(schema)
-
 class GeotagMixinEdit(object):
     """ Edit
     """

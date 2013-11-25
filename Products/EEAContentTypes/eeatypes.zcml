@@ -21,6 +21,7 @@
             DataFileLink
             SOER Key Fact
             SOER Message
+            GIS Application
          -->
     <class class="Products.ATContentTypes.content.folder.ATFolder">
         <implements interface="Products.EEAContentTypes.interfaces.IEEAPossibleContent" />

@@ -322,8 +322,8 @@ class IEEAContentTypesSettings(Interface):
 required_for_ctypes = ('Article', 'Highlight', 'PressRelease', 'Speech',
                  'DiversityReport', 'Data', 'EEAFigure', 'Report',
                  'PolicyDocumentReference', 'FlashFile', 'Infographic',
-                 'EcoTip', 'Page', 'SOERKeyFact', 'SOERMessage',
-                 'GIS+Application', 'EyewitnessStory',
+                 'EcoTip', 'Document', 'SOERKeyFact', 'SOERMessage',
+                 'GIS Application', 'EyewitnessStory',
                  'CloudVideo')
 
 class IEEAContentRegistryRequiredFields(Interface):
