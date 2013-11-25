@@ -5,21 +5,11 @@ from Products.Archetypes.ArchetypeTool import registerType
 from zope.interface import implements
 from Products.Archetypes import atapi
 from Products.EEAContentTypes.config import EEAMessageFactory as _, PROJECTNAME
-from Products.ATContentTypes.content import folder
-from Products.ATContentTypes.content import document
+from plone.app.blob import content
 from Products.EEAContentTypes.content.interfaces import IInfographic
 
 
 SCHEMA = atapi.Schema((
-    atapi.ImageField(
-        name="image",
-        schemata="default",
-        sizes=None,
-        widget=atapi.ImageWidget(
-            label=_("Thumbnail"),
-            description=_("Image for thumbnail")),
-        i18n_domain='eea',
-    ),
     atapi.StringField(
         name='imageCopyright',
         schemata="default",
@@ -62,7 +52,7 @@ SCHEMA = atapi.Schema((
 ))
 
 
-class Infographic(folder.ATFolder, document.ATDocumentBase):
+class Infographic(content.ATBlob):
     """ Infographic """
 
     implements(IInfographic)
@@ -72,8 +62,7 @@ class Infographic(folder.ATFolder, document.ATDocumentBase):
     archetypes_name = "Infographic"
 
     schema = (
-        folder.ATFolderSchema.copy() +
-        document.ATDocumentSchema.copy() +
+        content.ATBlobSchema.copy() +
         SCHEMA.copy()
     )
 
