@@ -7,7 +7,7 @@
         key="Infographic"
         manager="plone.rightcolumn"
         type="portlets.Readiness"
-        visible="False"
-        remove="True"/>
+        visible="True"
+        />
 
 </portlets>

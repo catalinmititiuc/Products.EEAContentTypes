@@ -3,6 +3,8 @@
     xmlns:five="http://namespaces.zope.org/five"
     i18n_domain="Products.EEAContentTypes">
 
+    <include file="component.zcml" />
+
     <!-- Viewlets -->
     <browser:viewlet
         name="eea.related_pages"

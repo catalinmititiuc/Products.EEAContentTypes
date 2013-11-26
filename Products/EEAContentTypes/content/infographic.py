@@ -88,6 +88,7 @@ class Infographic(image.ATImage):
         SCHEMA.copy()
     )
     schema["title"].required = True
+    schema["relatedItems"].required_for_published = True
 
 
 registerType(Infographic, PROJECTNAME)
