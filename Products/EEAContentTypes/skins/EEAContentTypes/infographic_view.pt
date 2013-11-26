@@ -18,9 +18,6 @@
     </a>
   </metal:img>
 
-  <metal:field use-macro="python:context.widget('text', mode='view')">
-      Body text
-  </metal:field>
 
 </metal:content-core>
 </metal:content-core>
