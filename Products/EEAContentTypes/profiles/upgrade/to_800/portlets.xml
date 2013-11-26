@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<portlets>
+
+    <assignment
+        name="readiness"
+        category="content_type"
+        key="Infographic"
+        manager="plone.rightcolumn"
+        type="portlets.Readiness"
+        visible="False"
+        remove="True"/>
+
+</portlets>
