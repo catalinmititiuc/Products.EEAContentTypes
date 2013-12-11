@@ -24,9 +24,7 @@
     <include file="eeatypes.zcml" />
     <include file="workflow.zcml" />
 
-    <cmf:registerDirectory name="EEAContentTypes"/>
-    <cmf:registerDirectory name="EEAContentTypes_public"/>
-    <cmf:registerDirectory name="EEAContentTypes_popupedit"/>
+    <cmf:registerDirectory name="skins" directory="skins" recursive="True" />
 
     <interface interface=".interfaces.IEEAPloneSite" />
 

@@ -1,8 +1,16 @@
 Changelog
 =========
 
-8.2-dev - (unreleased)
+8.4-dev - (unreleased)
 ----------------------
+
+8.3 - (2013-12-10)
+------------------
+* Bug fix: fixed ReST markup of HISTORY.txt
+  [ghicaale refs #17716]
+
+8.2 - (2013-12-10)
+------------------
 * Feature: SOER2015 base content now provides IEEAContent interface
   [ichimdav refs #17610]
 * Change: removed : from "Temporal coverage:" heading
@@ -79,12 +87,12 @@ Changelog
 * Change: updated zope imports with the versions that require minimum Plone 4.1
   for Products.EEAContentTypes
   [ichimdav refs #15651]
- * Manual Upgrade step:
+* Upgrade step:
    - Run before using the upgrade from prefs_install_products_form
    - Go to www/portal_workflow/manage_selectWorkflows >
-     - Remove the workflow for SOERKeyFact
-     - Hit Change button
-  [ichimdav #9476]
+      - Remove the workflow for SOERKeyFact
+      - Hit Change button
+   - [ichimdav #9476]
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for EEA Content Types
   [ichimdav #9476]
@@ -297,14 +305,13 @@ Changelog
 * Bug fix: Corrected errors in code.
 * Bug Fix: Removed the possibility to edit relations for translated objects.
   [prospchr refs #9569]
-* Upgrade step: Need to run the script that remove the relations
-  on translated objects:
-  - Check that the back-up has been done :-)
-  - In the ZMI, go to 0maintenance
-  - Add an External Method, call it clean_relations_of_translated_items
-    Module name: Products.EEAPloneAdmin.clean_relations_of_translated_items
-    Function Name: clean_relations
-  - Run it
+* Upgrade step: Need to run the script that remove the relations on translated objects:
+   - Check that the back-up has been done :-)
+   - In the ZMI, go to 0maintenance
+   - Add an External Method, call it clean_relations_of_translated_items
+      - Module name: Products.EEAPloneAdmin.clean_relations_of_translated_items
+      - Function Name: clean_relations
+   - Run it
 
 5.9 - (2013-01-28)
 ------------------

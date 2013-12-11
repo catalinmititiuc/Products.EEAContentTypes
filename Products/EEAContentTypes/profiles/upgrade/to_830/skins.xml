@@ -1,0 +1,9 @@
+<object name="portal_skins" meta_type="Plone Skins Tool">
+    <object name="eeatinymce_plugins" meta_type="Filesystem Directory View"
+            directory="Products.EEAContentTypes/skins/eeatinymce_plugins"/>
+
+    <skin-path name="*">
+        <layer insert-after="custom" name="eeatinymce_plugins"/>
+    </skin-path>
+</object>
+
