@@ -1,33 +1,28 @@
 """ FlashFile """
-from plone.app.blob.field import  ImageField
+from plone.app.blob.field import ImageField
 from zope.interface import implements
 from AccessControl import ClassSecurityInfo
 from Products.ATContentTypes.content.file import ATFile
-from Products.EEAContentTypes.config import PROJECTNAME
-from Products.EEAContentTypes.content.interfaces import ICloudVideo
-from Products.EEAContentTypes.content.ThemeTaggable import (
-    ThemeTaggable,
-    ThemeTaggable_schema,
-)
-from Products.Archetypes.atapi import (
-    Schema, ImageWidget, 
-    registerType, TextField, TextAreaWidget, RichWidget
-)
-
 from Products.CMFCore.permissions import View
 
+from Products.EEAContentTypes.config import PROJECTNAME
+from Products.EEAContentTypes.content.interfaces import ICloudVideo
+from Products.EEAContentTypes.content.utils import \
+    normalize_default_schemata_order
+from eea.themecentre.content.ThemeTaggable import ThemeTaggable
+from Products.Archetypes.atapi import (
+    Schema, ImageWidget,
+    registerType, TextField, TextAreaWidget, RichWidget
+)
 from Products.Archetypes.atapi import AnnotationStorage
 from Products.LinguaPlone import public
 
-from eea.forms.fields.ManagementPlanField import ManagementPlanField
-from eea.forms.widgets.ManagementPlanWidget import ManagementPlanWidget
-from datetime import datetime
 
 schema = Schema((
         ImageField('image',
             required=False,
-            storage = public.AnnotationStorage(migrate=True),
-              languageIndependent=True,
+            storage=public.AnnotationStorage(migrate=True),
+            languageIndependent=True,
             widget=ImageWidget(
                 label='Image',
                 label_msgid='EEAContentTypes_label_image',
@@ -36,23 +31,23 @@ schema = Schema((
                 show_content_type = False
             )
         ),
-        TextField('cloudUrl', 
+        TextField('cloudUrl',
                 languageIndependent=True,
-                required = True,
-                schemata = 'default',
-                storage = AnnotationStorage(migrate=True),
-                default_content_type = 'text/plain',
-                validators = ('videoCloudUrlValidator',),
-                allowable_content_types =('text/plain',),
-                default_output_type = 'text/plain',
-                widget = TextAreaWidget(
-                    description = 'The embedding code for the video from' \
+                required=True,
+                schemata='default',
+                storage=AnnotationStorage(migrate=True),
+                default_content_type='text/plain',
+                validators=('videoCloudUrlValidator',),
+                allowable_content_types=('text/plain',),
+                default_output_type='text/plain',
+                widget=TextAreaWidget(
+                    description='The embedding code for the video from' \
                                     ' external sites eg. Vimeo or Youtube',
                     description_msgid="EEAContentTypes_help_quotationtext",
-                    label = "Cloud Url",
+                    label="Cloud Url",
                     label_msgid="EEAContentTypes_label_cloud_url"
                 )
-        ), 
+        ),
         TextField(
             name='text',
             widget=RichWidget
@@ -63,34 +58,16 @@ schema = Schema((
                 rows=10,
             ),
         ),
-        ManagementPlanField(
-            name='eeaManagementPlan',
-            languageIndependent=True,
-            required=True,
-            default=(datetime.now().year, ''),
-            validators = ('management_plan_code_validator',),
-
-            vocabulary_factory="Temporal coverage",
-            storage = AnnotationStorage(migrate=True),
-            widget = ManagementPlanWidget(
-                format="select",
-                label="EEA Management Plan",
-                description = ("EEA Management plan code."),
-                label_msgid='dataservice_label_eea_mp',
-                description_msgid='dataservice_help_eea_mp',
-                i18n_domain='eea.dataservice',
-                ),
-            ),
-    ),
+    )
 )
 
 CloudVideo_schema = (getattr(ATFile, 'schema', Schema(())).copy() +
-                    ThemeTaggable_schema.copy() +
-                    schema.copy())
+                     schema.copy())
 
+# normalize_default_schemata_order(CloudVideo_schema)
 # hide file field from CloudVideo
 CloudVideo_schema['file'].required = False
-CloudVideo_schema['file'].widget.visible = {"edit" : "invisible", "view":
+CloudVideo_schema['file'].widget.visible = {"edit": "invisible", "view":
                                                                 "invisible"}
 
 

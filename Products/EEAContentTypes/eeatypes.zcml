@@ -2,13 +2,13 @@
            xmlns:zcml="http://namespaces.zope.org/zcml"
            i18n_domain="eea">
 
-    <adapter name="eea.temporalcoveragefield"
-             for="Products.EEAContentTypes.interfaces.IEEAContent"
-             factory=".subtypes.TemporalCoverageSchemaExtender"/>
+    <!--<adapter name="eea.temporalcoveragefield"-->
+             <!--for="Products.EEAContentTypes.interfaces.IEEAContent"-->
+             <!--factory=".subtypes.TemporalCoverageSchemaExtender"/>-->
 
-    <adapter name="eea.possibletemporalcoveragefield"
-             for="Products.EEAContentTypes.interfaces.IEEAPossibleContent"
-             factory=".subtypes.TemporalCoverageSchemaExtender"/>
+    <!--<adapter name="eea.possibletemporalcoveragefield"-->
+             <!--for="Products.EEAContentTypes.interfaces.IEEAPossibleContent"-->
+             <!--factory=".subtypes.TemporalCoverageSchemaExtender"/>-->
 
 
     <!-- #16719 Add IEEAPossibleContent interface for default contenttypes that

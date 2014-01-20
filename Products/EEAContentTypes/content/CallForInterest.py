@@ -53,8 +53,8 @@ schema = Schema((
 )
 
 CallForInterest_schema = getattr(ATFolder, 'schema', Schema(())).copy() + \
-    getattr(ATDocument, 'schema', Schema(())).copy() + \
-    schema.copy()
+    getattr(ATDocument, 'schema', Schema(())).copy() + schema.copy()
+
 
 class CallForInterest(ATFolder, ATDocument):
     """ Call for interest

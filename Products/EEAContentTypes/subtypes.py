@@ -4,14 +4,16 @@ from Products.Archetypes.Widget import MultiSelectionWidget
 
 from Products.Archetypes.interfaces import IBaseContent
 from Products.Archetypes.interfaces import ISchema
-from Products.EEAContentTypes.browser.interfaces import IEEAContentRegistryRequiredFields
+from Products.EEAContentTypes.browser.interfaces import \
+    IEEAContentRegistryRequiredFields
 from Products.EEAContentTypes.utils import \
     excluded_temporal_coverage_schemaextender_tuple
 from Products.LinguaPlone.public import InAndOutWidget
 from Products.LinguaPlone.public import StringField
 from Products.LinguaPlone.public import LinesField
 from archetypes.schemaextender.field import ExtensionField
-from archetypes.schemaextender.interfaces import ISchemaExtender
+from archetypes.schemaextender.interfaces import ISchemaExtender, \
+    IOrderableSchemaExtender
 from archetypes.schemaextender.interfaces import ISchemaModifier
 from eea.geotags import field
 from eea.geotags import widget
@@ -125,21 +127,6 @@ class LocationSchemaExtender(object):
             ),
         )
 
-    single_location = (
-        ExtensionGeotagsSinglefield(
-            name='location',
-            schemata='categorization',
-            required=False,
-            languageIndependent=True,
-            widget=widget.GeotagsWidget(
-                label='Geotag / Location',
-                description=('Geotags: geographical location '
-                             'related to this content. Click Edit button '
-                             'to select a location')
-                )
-            ),
-        )
-
     def __init__(self, context):
         self.context = context
 
@@ -183,6 +170,128 @@ class LocationSchemaExtender(object):
                              'related to this content. Click Edit button '
                              'to select a location')
             return self.multiple_location
+
+
+
+class EEABaseSchemaExtender(object):
+    """ Base fields affecting all objects
+    """
+
+    fields = [
+
+        ExtensionGeotagsMultifield(
+            name='location',
+            schemata='categorization',
+            required=False,
+            languageIndependent=True,
+            default=[],
+            widget=widget.GeotagsWidget(
+                label='Geotags / Locations',
+                description=('Geotags: multiple geographical locations '
+                             'related to this content. Click Edit button '
+                             'to select a location')
+            )
+        ),
+
+        ExtensionRelationsField('relatedItems',
+            schemata='categorization',
+            relationship='relatesTo',
+            multiValued=True,
+            languageIndependent=True,
+            keepReferencesOnCopy=True,
+            widget=EEAReferenceBrowserWidget(
+                label='Related items',
+                description='Specify relations to other content within Plone.'
+            )
+        ),
+
+        ExtensionThemesField(
+            name='themes',
+            schemata='categorization',
+            validators=('maxValues',),
+            required=False,
+            widget=InAndOutWidget(
+                maxValues=3,
+                label="Themes",
+                description="Choose max 3 themes",
+                ),
+            languageIndependent=True,
+            vocabulary_factory=u"Allowed themes for edit",
+        ),
+
+        ExtensionLinesField(
+            name='temporalCoverage',
+            languageIndependent=True,
+            schemata='categorization',
+            required=False,
+            multiValued=1,
+            vocabulary_factory=u"Temporal coverage",
+            widget=MultiSelectionWidget(
+                macro="temporal_widget",
+                helper_js=("temporal_widget.js",),
+                size=15,
+                label="Temporal coverage",
+                description=("The temporal scope of the content of the data "
+                             "resource. Temporal coverage will typically "
+                             "include a set of years or time ranges."),
+                label_msgid='dataservice_label_coverage',
+                description_msgid='dataservice_help_coverage',
+                i18n_domain='eea',
+            )
+        ),
+
+        ExtensionManagementField(
+            name='eeaManagementPlan',
+            languageIndependent=True,
+            schemata='categorization',
+            required=True,
+            default=(datetime.now().year, ''),
+            validators=('management_plan_code_validator',),
+            vocabulary_factory=u"Temporal coverage",
+            widget=ManagementPlanWidget(
+                format="select",
+                label="EEA Management Plan",
+                description=_("EEA Management plan code."),
+                label_msgid='dataservice_label_eea_mp',
+                description_msgid='dataservice_help_eea_mp',
+                i18n_domain='eea',
+            )
+        ),
+    ]
+    implements(IOrderableSchemaExtender)
+
+    def __init__(self, context):
+        self.context = context
+
+    def getFields(self):
+        """ Fields
+        """
+        return self.fields
+
+    def getOrder(self, schematas):
+        """ Manipulate the order in which fields appear.
+
+        @param schematas: Dictionary of schemata name -> field lists
+
+        @return: Dictionary of reordered field lists per schemata.
+        """
+
+        categorization = schematas.get('categorization', [])
+        categorization_order = [
+            'subject',
+            'relatedItems',
+            'location',
+            'language',
+            'themes',
+            'temporalCoverage',
+            'eeaManagementPlan',
+            ]
+
+        categorization_order.extend([x for x in categorization if x not in
+                                                          categorization_order])
+        schematas['categorization'] = categorization_order
+
+        return schematas
 
 
 class ThemesSchemaExtender(object):

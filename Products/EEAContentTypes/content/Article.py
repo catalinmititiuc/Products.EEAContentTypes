@@ -25,7 +25,7 @@ schema = Schema((
         index="KeywordIndex:brains",
         widget=InAndOutWidget(
             label=_(u'Publication groups'),
-         description=_(u'Fill in publication groups'),
+            description=_(u'Fill in publication groups'),
             i18n_domain='eea',
             ),
         ),
@@ -35,7 +35,7 @@ schema = Schema((
 Article_schema = getattr(Highlight, 'schema', Schema(())).copy() + \
                   schema.copy()
 
-fields2Move2DefaultSchemata = ['management_plan', 'image', 'imageLink',
+fields2Move2DefaultSchemata = ['eeaManagementPlan', 'image', 'imageLink',
                                'imageCaption', 'imageNote']
 for fieldname in getNames(ExtHighlightSchema):
     field = Article_schema[fieldname]
@@ -46,7 +46,6 @@ for fieldname in getNames(ExtHighlightSchema):
 
 Article_schema['text'].required = True
 Article_schema.moveField('image', before='imageCaption')
-Article_schema.moveField('themes', before='image')
 
 #visibility level is "deprecated/hidden" by default
 # used on feature article

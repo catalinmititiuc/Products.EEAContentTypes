@@ -1,6 +1,5 @@
 """ ExternalHighlight """
 
-from datetime import datetime
 import logging
 
 from AccessControl import ClassSecurityInfo
@@ -15,8 +14,6 @@ from Products.CMFCore.permissions import View
 from Products.validation import V_REQUIRED
 from zope.interface import implements
 
-from eea.forms.fields.ManagementPlanField import ManagementPlanField
-from eea.forms.widgets.ManagementPlanWidget import ManagementPlanWidget
 from eea.themecentre.interfaces import IThemeTagging
 from Products.Archetypes.Field import Image as ZODBImage
 from Products.Archetypes.Field import ImageField
@@ -265,33 +262,13 @@ schema = public.Schema((
         languageIndependent=True
     ),
 
-    ManagementPlanField(
-        name='management_plan',
-        languageIndependent=True,
-        required_for_published=True,
-        required=True,
-        default=(datetime.now().year, ''),
-        validators = ('management_plan_code_validator',),
-        vocabulary_factory = u"Temporal coverage",
-        widget = ManagementPlanWidget(
-            format="select",
-            label="EEA Management Plan",
-            description=("EEA Management plan code. Internal EEA project "
-                         "line code, used to assign an EEA product output to "
-                         "a specific EEA project number in the "
-                         "management plan."),
-            label_msgid='dataservice_label_eea_mp',
-            description_msgid='dataservice_help_eea_mp',
-            i18n_domain='eea.dataservice',
-        )
-        ),
-
 ),
 )
 
-ExternalHighlight_schema = getattr(ATFolder, 'schema', public.Schema(())
-    ).copy() + getattr(ThemeTaggable, 'schema', public.Schema(())
-    ).copy() + schema.copy()
+ExternalHighlight_schema = getattr(ATFolder, 'schema',
+                                   public.Schema(())).copy() + \
+                                   schema.copy()
+
 
 
 class ExternalHighlight(ATFolder, ThemeTaggable):

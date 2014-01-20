@@ -29,8 +29,8 @@ def finalizeSchema(schema, disableRelated=False, moveDiscussion=True,
         schema['relatedItems'].widget.visible['edit'] = 'visible'
         schema.moveField('relatedItems', after='text')
 
-    if moveThemeTag:
-        schema.moveField('themes', before='relatedItems')
+    # if moveThemeTag:
+    #     schema.moveField('themes', before='relatedItems')
 
     if moveDiscussion:
         schema['allowDiscussion'].schemata = 'metadata'

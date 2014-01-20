@@ -54,7 +54,8 @@ schema = Schema((
                       
     ))
 
-GIS_schema = getattr(ATLink, 'schema', Schema(())).copy() + schema
+GIS_schema = getattr(ATLink, 'schema', Schema(())).copy() + schema.copy()
+
 
 #Schema overwrites
 

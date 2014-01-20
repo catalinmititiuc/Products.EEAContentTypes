@@ -25,32 +25,39 @@
     <adapter factory=".subtypes.GeotagSingleEdit"/>
     <adapter factory=".subtypes.GeotagMultiEdit"/>
 
-    <adapter name="eea.locationfield"
-        for="Products.Archetypes.interfaces.IBaseContent"
-        factory=".subtypes.LocationSchemaExtender"/>
+    <!--<adapter name="eea.locationfield"-->
+        <!--for="Products.Archetypes.interfaces.IBaseContent"-->
+        <!--factory=".subtypes.LocationSchemaExtender"/>-->
 
-    <!-- #4705 It should be for IBaseContent once generic relation works #4908 -->
-    <adapter name="eea.relationsfield"
-        for="eea.relations.interfaces.IBaseObject"
-        factory=".subtypes.RelationsSchemaExtender" />
+     <!--#4705 It should be for IBaseContent once generic relation works #4908-->
+    <!--<adapter name="eea.relationsfield"-->
+        <!--for="eea.relations.interfaces.IBaseObject"-->
+        <!--factory=".subtypes.RelationsSchemaExtender" />-->
 
-    <adapter name="eea.themesfield"
-        for="Products.Archetypes.interfaces.IBaseContent"
-        factory=".subtypes.ThemesSchemaExtender"/>
+    <!--<adapter name="eea.themesfield"-->
+        <!--for="Products.Archetypes.interfaces.IBaseContent"-->
+        <!--factory=".subtypes.ThemesSchemaExtender"/>-->
 
+    <adapter name="eea.basefields"
+             for="Products.EEAContentTypes.interfaces.IEEAContent"
+             factory=".subtypes.EEABaseSchemaExtender"/>
 
-    <!-- adapter name="eea.temporalcoveragefield"
-             for="Products.Archetypes.interfaces.IBaseContent"
-             factory=".subtypes.TemporalCoverageSchemaExtender"/ -->
+    <adapter name="eea.basefields4plone"
+             for="Products.EEAContentTypes.interfaces.IEEAPossibleContent"
+             factory=".subtypes.EEABaseSchemaExtender"/>
 
-    <!-- #14719 added ManagementPlanField for the following -->
-    <adapter name="eea.managementplanfield4InteractiveData"
-             for="Products.EEAContentTypes.content.interfaces.IInteractiveData"
-             factory=".subtypes.ManagementPlanFieldExtender"/>
+    <!--<adapter name="eea.temporalcoveragefield"-->
+             <!--for="Products.Archetypes.interfaces.IBaseContent"-->
+             <!--factory=".subtypes.TemporalCoverageSchemaExtender" />-->
 
-    <adapter name="eea.managementplanfield4InteractiveMap"
-             for="Products.EEAContentTypes.content.interfaces.IInteractiveMap"
-             factory=".subtypes.ManagementPlanFieldExtender"/>
+     <!--#14719 added ManagementPlanField for the following-->
+    <!--<adapter name="eea.managementplanfield4InteractiveData"-->
+             <!--for="eea.relations.interfaces.IBaseObject"-->
+             <!--factory=".subtypes.ManagementPlanFieldExtender"/>-->
+
+    <!--<adapter name="eea.managementplanfield4InteractiveMap"-->
+             <!--for="Products.EEAContentTypes.content.interfaces.IInteractiveMap"-->
+             <!--factory=".subtypes.ManagementPlanFieldExtender"/>-->
 
     <!-- #14900 added ManagementPlanField for SOER Content -->
     <adapter zcml:condition="installed eea.soercontent"
@@ -64,9 +71,9 @@
         factory=".subtypes.KeywordsSchemaModifier" />
 
     <!-- Required fields adapter -->
-    <adapter name="eea.requiredfields"
-        for="Products.EEAContentTypes.interfaces.IEEAContent"
-        factory=".subtypes.RequiredSchemaModifier" />
+    <!--<adapter name="eea.requiredfields"-->
+        <!--for="Products.EEAContentTypes.interfaces.IEEAContent"-->
+        <!--factory=".subtypes.RequiredSchemaModifier" />-->
 
     <adapter name="eea.requiredfields4possiblecontenttypes"
              for="Products.EEAContentTypes.interfaces.IEEAPossibleContent"

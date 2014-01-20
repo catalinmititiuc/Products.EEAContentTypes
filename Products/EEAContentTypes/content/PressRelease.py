@@ -9,15 +9,10 @@ from Products.LinguaPlone.public import (
 from Products.CMFCore.permissions import ModifyPortalContent
 from eea.themecentre.interfaces import IThemeTagging
 
-schema = Schema((
-
-),
-)
 
 PressRelease_schema = BaseSchema.copy() + \
     getattr(Highlight, 'schema', Schema(())).copy() + \
-    quotation_schema.copy() + \
-    schema.copy()
+    quotation_schema.copy()
 
 
 class PressRelease(Highlight, BaseContent):

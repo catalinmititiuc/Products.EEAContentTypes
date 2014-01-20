@@ -15,18 +15,16 @@ from Products.LinguaPlone.public import Schema, registerType
 from eea.themecentre.interfaces import IThemeTagging
 from zope.interface import implements
 
-schema = Schema((),)
 
 
-Highlight_schema =  getattr(ATNewsItem, 'schema', Schema(())).copy() + \
+Highlight_schema = getattr(ATNewsItem, 'schema', Schema(())).copy() + \
     getattr(ExternalHighlight, 'schema', Schema(())).copy() + \
-    quotation_schema.copy() + \
-    schema.copy()
+    quotation_schema.copy()
 
 # put all the external highlights fields into their own schema
 ExternalHighlightSchema = ExtHighlightSchema.copy()
 
-fields2Move2DefaultSchemata = ['management_plan']
+fields2Move2DefaultSchemata = ['eeaManagementField']
 for fieldname in getNames(ExternalHighlightSchema):
     field = Highlight_schema[fieldname]
     if fieldname in fields2Move2DefaultSchemata:
@@ -38,7 +36,6 @@ for fieldname in getNames(ExternalHighlightSchema):
 Highlight_schema['text'].required = True
 validators = Highlight_schema['text'].validators
 validators.appendRequired(ExistsKeyFactsValidator('existsKeyFacts'))
-Highlight_schema.moveField('image', before='imageCaption')
 
 
 class Highlight(ExternalHighlight, ATNewsItem):
