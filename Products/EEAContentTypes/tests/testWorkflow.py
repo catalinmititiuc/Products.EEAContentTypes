@@ -140,20 +140,21 @@ class TestWorkflowModified(EEAContentTypeTestCase):
         self.login('manager')
 
         # Before state change modification dates
-        before = [doc.modified() for doc in self.sandbox.objectValues()]
+        objects = self.sandbox.objectValues()
+        before = [doc.modified() for doc in objects]
 
         # Sleep for a second
         time.sleep(1)
 
-        for doc in self.sandbox.objectValues():
+        for doc in objects:
             doc.content_status_modify(
                 workflow_action='publish', comment='Published by test')
 
         # After state change modification dates
-        after = [doc.modified() for doc in self.sandbox.objectValues()]
+        after = [doc.modified() for doc in objects]
 
         errors = set()
-        children = self.sandbox.objectValues()
+        children = objects
         for index, date in enumerate(before):
             did = children[index].getId()
             # If date is unchanged after state change,
@@ -164,19 +165,56 @@ class TestWorkflowModified(EEAContentTypeTestCase):
         # Fail if errors
         self.failIf(errors, errors)
 
+    # def test_publish_effective_date(self):
+    #     """ Test that effective date is set when objects are published
+    #     """
+    #     self.login('manager')
+    #
+    #     objects = self.sandbox.objectValues()
+    #     # Before state change modification dates
+    #     before = []
+    #
+    #     # Sleep for a second
+    #     time.sleep(1)
+    #     modified_objects = []
+    #     for doc in objects:
+    #         review_state = self.workflow.getInfoFor(doc, 'review_state', None)
+    #         if not review_state:
+    #             continue
+    #         before.append(doc.effective())
+    #         doc.content_status_modify(
+    #             workflow_action='publish', comment='Published by test')
+    #         modified_objects.append(doc)
+    #
+    #     # After state change modification dates
+    #     after = [doc.effective() for doc in modified_objects]
+    #
+    #     errors = set()
+    #     children = modified_objects
+    #     for index, date in enumerate(before):
+    #         did = children[index].getId()
+    #         # If date is unchanged after state change,
+    #         # add doc id to errors
+    #         if date == after[index]:
+    #             errors.add(did)
+    #
+    #     # Fail if errors
+    #     self.failIf(errors, errors)
+
+
     def test_bulk_publish(self):
         """ Test bulk state changed to published
         """
         self.login('manager')
-
+        objects = self.sandbox.objectValues()
         # Before state change modification dates
-        before = [x.modified() for x in self.sandbox.objectValues()]
+        before = [x.modified() for x in objects]
 
         # Sleep for a second
         time.sleep(1)
 
         paths = ['/'.join(y.getPhysicalPath())
-                 for y in self.sandbox.objectValues()]
+                 for y in objects]
 
 
         # Publish
@@ -194,10 +232,10 @@ class TestWorkflowModified(EEAContentTypeTestCase):
         self.sandbox.folder_publish(workflow_action='publish', paths=paths)
 
         # After state change modification dates
-        after = [z.modified() for z in self.sandbox.objectValues()]
+        after = [z.modified() for z in objects]
 
         errors = set()
-        children = self.sandbox.objectValues()
+        children = objects
         for index, date in enumerate(before):
             did = children[index].getId()
 
