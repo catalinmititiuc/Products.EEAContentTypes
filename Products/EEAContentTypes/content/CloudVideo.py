@@ -7,8 +7,6 @@ from Products.CMFCore.permissions import View
 
 from Products.EEAContentTypes.config import PROJECTNAME
 from Products.EEAContentTypes.content.interfaces import ICloudVideo
-from Products.EEAContentTypes.content.utils import \
-    normalize_default_schemata_order
 from eea.themecentre.content.ThemeTaggable import ThemeTaggable
 from Products.Archetypes.atapi import (
     Schema, ImageWidget,
