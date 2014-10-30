@@ -92,6 +92,8 @@ class ExtensionGeotagsSinglefield(ExtensionField, field.GeotagsStringField):
 class ExtensionGeotagsMultifield(ExtensionField, field.GeotagsLinesField):
     """ derivative of blobfield for extending schemas """
 
+class ExtensionCountryMultifield(ExtensionField, field.CountriesLinesField):
+    """ derivative of blobfield for extending schemas """
 
 class ExtensionThemesField(ExtensionField, ThemesField):
     """ derivative of themesfield for extending schemas """
@@ -228,12 +230,12 @@ class CountriesInvolvedSchemaExtender(object):
     implements(ISchemaExtender)
 
     countries_involved = (
-        ExtensionGeotagsMultifield(
+        ExtensionCountryMultifield(
             name='countriesInvolved',
             schemata='categorization',
             required=False,
             languageIndependent=True,
-            widget=widget.GeotagsWidget(
+            widget=widget.CountriesWidget(
                 label='Countries involved',
                 description=('Countries and country groups. '
                              'Click Edit button '
